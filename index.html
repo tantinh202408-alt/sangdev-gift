@@ -53,19 +53,31 @@ body.tpl-body-mon-qua-nho-2010 .gift-brand { position: fixed; left: 0; right: 0;
     var params = new URLSearchParams(window.location.search);
     var code = params.get('code');
     var rawData = params.get('data');
+
+    // Không có mã quà tặng -> Tự động chuyển hướng về trang tạo quà (create.html)
+    if (!code && !rawData) {
+        window.location.replace('/create.html');
+        return;
+    }
+
     if (rawData) {
         try {
             window.__GIFTTO_APP = JSON.parse(decodeURIComponent(escape(atob(rawData))));
         } catch(e) {}
-    } else if (code && code !== 'PVB33A62') {
+    } else if (code) {
         fetch('/data/' + encodeURIComponent(code.toUpperCase()) + '.json')
-            .then(function(r) { return r.json(); })
+            .then(function(r) {
+                if (!r.ok) throw new Error('Not found');
+                return r.json();
+            })
             .then(function(d) {
                 window.__GIFTTO_APP = d;
                 var frame = document.querySelector('.gift-app-frame');
                 if (frame) frame.src = frame.src;
             })
-            .catch(function(e) {});
+            .catch(function(e) {
+                console.log('Code fetch error:', e);
+            });
     }
 })();
 </script>
