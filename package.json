@@ -1,17 +1,21 @@
 {
-  "name": "deargift-creator",
+  "name": "sangdev-3d-gift",
   "version": "1.0.0",
-  "description": "Hệ thống tạo & tùy chỉnh quà tặng 3D DearGift qua API & mã code",
+  "description": "Hệ thống quà tặng 3D Studio & API cá nhân hóa bởi sangdev",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "dev": "node --watch server.js"
   },
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "keywords": [
-    "deargift",
+    "sangdev",
     "3d",
+    "gift",
     "threejs"
   ],
-  "author": "",
+  "author": "sangdev",
   "license": "ISC"
 }

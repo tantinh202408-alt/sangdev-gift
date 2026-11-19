@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const url = require('url');
 const https = require('https');
+const { execFile } = require('child_process');
 
 const PORT = process.env.PORT || 3000;
 const DATA_DIR = path.join(__dirname, 'data');
@@ -213,7 +214,7 @@ const server = http.createServer(async (req, res) => {
     // API ROUTES
     // ==========================================
 
-    // POST /api/upload: Upload image file (Base64) -> Returns URL link
+    // POST /api/upload: Upload image/audio file (Base64) -> Returns URL link
     if (pathname === '/api/upload' && req.method === 'POST') {
         try {
             const body = await parseJsonBody(req);
@@ -235,8 +236,17 @@ const server = http.createServer(async (req, res) => {
             else if (mime === 'image/webp') ext = '.webp';
             else if (mime === 'image/gif') ext = '.gif';
             else if (mime === 'image/svg+xml') ext = '.svg';
+            else if (mime === 'audio/mpeg' || mime === 'audio/mp3') ext = '.mp3';
+            else if (mime === 'audio/wav' || mime === 'audio/x-wav') ext = '.wav';
+            else if (mime === 'audio/ogg') ext = '.ogg';
+            else if (mime === 'audio/mp4' || mime === 'audio/x-m4a' || mime === 'audio/m4a') ext = '.m4a';
 
-            const cleanBaseName = (name ? path.parse(name).name : 'photo')
+            const parsedExt = path.extname(name || '').toLowerCase();
+            if (['.mp3', '.wav', '.ogg', '.m4a', '.aac', '.png', '.jpg', '.jpeg', '.webp', '.gif', '.svg'].includes(parsedExt)) {
+                ext = parsedExt;
+            }
+
+            const cleanBaseName = (name ? path.parse(name).name : 'media')
                 .replace(/[^a-zA-Z0-9_-]/g, '_')
                 .substring(0, 30);
             const fileName = `${Date.now()}_${cleanBaseName}${ext}`;
@@ -288,6 +298,81 @@ const server = http.createServer(async (req, res) => {
         }
     }
 
+    // POST /api/convert-audio: Extract & Convert YouTube or TikTok audio to MP3
+    if (pathname === '/api/convert-audio' && req.method === 'POST') {
+        try {
+            const body = await parseJsonBody(req);
+            const mediaUrl = (body.url || '').trim();
+            if (!mediaUrl || !mediaUrl.startsWith('http')) {
+                res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+                return res.end(JSON.stringify({ success: false, error: 'Vui lòng cung cấp link YouTube hoặc TikTok hợp lệ' }));
+            }
+
+            console.log(`[Audio Converter] Đang trích xuất nhạc từ: ${mediaUrl}`);
+
+            const args = [
+                '--no-playlist',
+                '--js-runtimes', 'node',
+                '-x',
+                '--audio-format', 'mp3',
+                '--max-filesize', '60M',
+                '--print', 'after_move:filepath',
+                '--print', 'title',
+                '-o', path.join(UPLOADS_DIR, 'audio_%(id)s.%(ext)s'),
+                mediaUrl
+            ];
+
+            execFile('yt-dlp', args, { timeout: 90000 }, (error, stdout, stderr) => {
+                if (error) {
+                    console.error('[Audio Converter] Lỗi:', error.message);
+                    res.writeHead(500, { 'Content-Type': 'application/json; charset=utf-8' });
+                    return res.end(JSON.stringify({
+                        success: false,
+                        error: 'Không thể trích xuất nhạc từ link này: ' + (stderr || error.message).substring(0, 200)
+                    }));
+                }
+
+                const lines = stdout.trim().split(/\r?\n/).filter(Boolean);
+                let filePath = '';
+                let title = 'Nhạc từ video';
+
+                for (const line of lines) {
+                    if (line.includes('uploads') && line.endsWith('.mp3')) {
+                        filePath = line.trim();
+                    } else if (!filePath && line.trim()) {
+                        title = line.trim();
+                    }
+                }
+
+                if (!filePath) {
+                    const files = fs.readdirSync(UPLOADS_DIR).filter(f => f.startsWith('audio_') && f.endsWith('.mp3'));
+                    if (files.length > 0) {
+                        filePath = path.join(UPLOADS_DIR, files[files.length - 1]);
+                    }
+                }
+
+                const fileName = path.basename(filePath);
+                const relativeUrl = `/uploads/${fileName}`;
+                const fullUrl = `${baseUrl}${relativeUrl}`;
+
+                console.log(`[Audio Converter] Thành công: ${fileName} (${title})`);
+
+                res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+                return res.end(JSON.stringify({
+                    success: true,
+                    url: relativeUrl,
+                    fullUrl: fullUrl,
+                    title: title,
+                    fileName: fileName
+                }));
+            });
+            return;
+        } catch (err) {
+            res.writeHead(500, { 'Content-Type': 'application/json; charset=utf-8' });
+            return res.end(JSON.stringify({ success: false, error: err.message }));
+        }
+    }
+
     // POST /api/gifts: Create or update a gift with code
     if (pathname === '/api/gifts' && req.method === 'POST') {
         try {
@@ -315,7 +400,8 @@ const server = http.createServer(async (req, res) => {
             return res.end(JSON.stringify({
                 success: true,
                 code,
-                giftUrl: `/gift.php?code=${code}`,
+                giftUrl: `/gift?code=${code}`,
+                shortUrl: `/g/${code}`,
                 data: giftPayload
             }));
         } catch (err) {
@@ -364,11 +450,20 @@ const server = http.createServer(async (req, res) => {
     }
 
     // ==========================================
-    // GIFT VIEW ROUTES (Supports ?code=XYZ)
+    // GIFT VIEW ROUTES (Clean URLs & Short Links)
     // ==========================================
+
+    // 1. Short Share Link: /g/:code (e.g. /g/PVB33A62 or /g/SANG88)
+    const shortLinkMatch = pathname.match(/^\/g\/([A-Za-z0-9_-]+)$/);
+    if (shortLinkMatch) {
+        const code = shortLinkMatch[1];
+        return renderGiftPage(res, code);
+    }
+
+    // 2. Query routes: /gift?code=XYZ or /index.html?code=XYZ
     if (
-        pathname === '/gift.php' ||
         pathname === '/gift' ||
+        pathname === '/gift.php' ||
         pathname === '/mon-qua-nho-2010/gift.php' ||
         (pathname === '/index.html' && parsedUrl.searchParams.has('code'))
     ) {
@@ -399,11 +494,11 @@ const server = http.createServer(async (req, res) => {
     res.end('<h1>404 Không tìm thấy trang</h1><p><a href="/create.html">Quay về trang tạo quà tặng</a></p>');
 });
 
-server.listen(PORT, () => {
+server.listen(PORT, '0.0.0.0', () => {
     console.log(`\n==================================================`);
-    console.log(`🎁 DearGift Server đang chạy tại: http://localhost:${PORT}`);
+    console.log(`🎁 sangdev Server đang chạy tại: http://localhost:${PORT}`);
     console.log(`✨ Trang tạo quà tặng: http://localhost:${PORT}/create.html`);
     console.log(`🎉 Quà mẫu gốc: http://localhost:${PORT}/gift.php?code=PVB33A62`);
-    console.log(`📁 Thư mục lưu trữ ảnh API: ${UPLOADS_DIR}`);
+    console.log(`📁 Thư mục lưu trữ ảnh & nhạc API: ${UPLOADS_DIR}`);
     console.log(`==================================================\n`);
 });

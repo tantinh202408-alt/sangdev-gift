@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DearGift 3D Studio · Developer Edition ⚡</title>
+    <title>sangdev · 3D Gift Studio ⚡</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -634,8 +634,7 @@
         <div class="brand-group">
             <div class="brand-logo">🎁</div>
             <div>
-                <span class="brand-name">DEARGIFT STUDIO</span>
-                <span class="badge-dev">DEV V2.4</span>
+                <span class="brand-name">sangdev</span>
             </div>
         </div>
 
@@ -670,6 +669,7 @@
                 <button type="button" class="tab-btn" data-tab="tab-content">💌 Letter & Calendar</button>
                 <button type="button" class="tab-btn" data-tab="tab-bouquet">🌹 Bouquet & Card</button>
                 <button type="button" class="tab-btn" data-tab="tab-finale">🎆 Finale 3D</button>
+                <button type="button" class="tab-btn" data-tab="tab-music">🎵 Music & Audio</button>
                 <button type="button" class="tab-btn" data-tab="tab-json">💻 Raw JSON API</button>
             </div>
 
@@ -680,7 +680,7 @@
                         <div class="section-header">
                             <div>
                                 <h3 class="section-title">🔑 Mã Quà Tặng (Unique Access Code)</h3>
-                                <p class="section-desc">Mã định danh URL quà tặng: /gift.php?code={CODE}</p>
+                                <p class="section-desc">Mã định danh URL quà tặng: /gift?code={CODE}</p>
                             </div>
                             <div style="display: flex; gap: 8px;">
                                 <button type="button" class="btn btn-sm" id="btnRandomCode">🎲 Random</button>
@@ -695,7 +695,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Đường dẫn truy cập</label>
-                                <input type="text" id="previewUrlBox" class="code-input" readonly value="/gift.php?code=PVB33A62" style="color: var(--text-tertiary) !important;">
+                                <input type="text" id="previewUrlBox" class="code-input" readonly value="/gift?code=PVB33A62" style="color: var(--text-tertiary) !important;">
                             </div>
                         </div>
                     </div>
@@ -789,6 +789,10 @@
                             </div>
                         </div>
 
+                                                <div style="background: rgba(56, 189, 248, 0.08); border: 1px solid rgba(56, 189, 248, 0.25); border-radius: 8px; padding: 10px 14px; font-size: 0.8rem; color: #38bdf8; display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                            <span>💡</span>
+                            <span><b>Dán thẳng link ngoài được nhé:</b> Bạn có thể dán trực tiếp link ảnh từ Imgur, Catbox, Cloudinary, Facebook, Google Drive, CDN... Server chỉ lưu link text trong JSON (~1KB), <b>hoàn toàn KHÔNG tốn dung lượng hay gánh băng thông server!</b></span>
+                        </div>
                         <div class="media-grid" id="sphereMediaGrid">
                             <!-- 6 cards rendered dynamically -->
                         </div>
@@ -1026,6 +1030,97 @@ Cảm ơn anh vì đã luôn chở che, nhường nhịn và yêu thương em. D
                     </div>
                 </div>
 
+                <!-- TAB: MUSIC & AUDIO -->
+                <div class="tab-content" id="tab-music" style="display: none;">
+                    <div class="panel-section">
+                        <div class="section-header">
+                            <div>
+                                <h3 class="section-title">🎵 Nhạc Nền Quà Tặng (Background Music)</h3>
+                                <p class="section-desc">Tải file nhạc MP3 từ máy tính lên API lưu trữ dạng link hoặc dán link online</p>
+                            </div>
+                        </div>
+
+                                                <div style="background: rgba(56, 189, 248, 0.08); border: 1px solid rgba(56, 189, 248, 0.25); border-radius: 8px; padding: 10px 14px; font-size: 0.8rem; color: #38bdf8; display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                            <span>💡</span>
+                            <span><b>Dán thẳng link MP3 trực tuyến:</b> Bạn có thể dán thẳng link nhạc .mp3 từ bất kỳ host nào (Zing, Nhaccuatui, SoundCloud, CDN...). Server không cần lưu file nhạc, trình duyệt người xem sẽ tự stream từ link đó!</span>
+                        </div>
+                        
+                        <div style="background: linear-gradient(135deg, rgba(236, 72, 153, 0.12), rgba(139, 92, 246, 0.12)); border: 1px solid rgba(236, 72, 153, 0.4); border-radius: 12px; padding: 16px; margin-bottom: 16px;">
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                                <div style="font-weight: 700; font-size: 0.95rem; color: #fff; display: flex; align-items: center; gap: 8px;">
+                                    <span style="font-size: 1.2rem;">🎬</span>
+                                    <span>Lấy Nhạc Từ YouTube Hoặc TikTok (Tự Động Chuyển Thành MP3)</span>
+                                </div>
+                                <span class="badge-dev" style="background: rgba(236, 72, 153, 0.2); color: #f472b6; border-color: #ec4899;">AUTO CONVERTER</span>
+                            </div>
+                            <p style="font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 12px; line-height: 1.5;">
+                                Dán bất kỳ link video/âm thanh từ <b>YouTube</b> (youtube.com, youtu.be, shorts) hoặc <b>TikTok</b> (tiktok.com, vt.tiktok.com) vào đây. Server sẽ tự động tách track âm thanh chất lượng cao thành link MP3 hoàn chỉnh!
+                            </p>
+                            <div style="display: flex; gap: 8px;">
+                                <input type="text" id="videoUrlInput" placeholder="Ví dụ: https://www.youtube.com/watch?v=... hoặc https://vt.tiktok.com/..." class="code-input" style="flex: 1; font-size: 0.85rem;">
+                                <button type="button" class="btn btn-primary" id="btnConvertVideoAudio" style="white-space: nowrap; font-weight: 700;">
+                                    ⚡ Trích Xuất MP3 Ngay
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="grid-2">
+                            <div class="form-group full">
+                                <label>Đường Dẫn File Nhạc (MP3 URL)</label>
+                                <div style="display: flex; gap: 8px;">
+                                    <input type="text" id="bgMusicUrl" value="/uploads/demo_givemeyourforever.mp3" class="code-input" style="flex: 1;" placeholder="/uploads/... hoặc https://...">
+                                    <label class="btn btn-primary" style="cursor: pointer; white-space: nowrap;">
+                                        📁 Tải file MP3 từ máy
+                                        <input type="file" accept="audio/*" class="upload-input-file" onchange="devUploadAudio(this)">
+                                    </label>
+                                </div>
+                                <span class="section-desc" style="margin-top: 4px;">Hỗ trợ định dạng .mp3, .m4a, .wav. File nhạc được tải trực tiếp lên API và lưu dưới dạng link URL cố định.</span>
+                            </div>
+
+                            <div class="form-group full" style="margin-top: 6px;">
+                                <label>🎧 Nghe Thử Nhạc Nền Trực Tiếp</label>
+                                <div style="background: var(--bg-card); border: 1px solid var(--border-subtle); padding: 14px 18px; border-radius: 10px; display: flex; align-items: center; gap: 14px;">
+                                    <button type="button" class="btn btn-primary" id="btnPlayPauseAudio" style="width: 44px; height: 44px; border-radius: 50%; padding: 0; font-size: 1.1rem; display: flex; align-items: center; justify-content: center;">
+                                        ▶
+                                    </button>
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: 600; font-size: 0.9rem;" id="audioTrackName">Give Me Your Forever (Mặc định)</div>
+                                        <div style="font-size: 0.75rem; color: var(--text-tertiary); font-family: var(--font-mono); word-break: break-all;" id="audioTrackUrl">/uploads/demo_givemeyourforever.mp3</div>
+                                    </div>
+                                    <audio id="audioPreviewPlayer" src="/uploads/demo_givemeyourforever.mp3" preload="none"></audio>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel-section" style="margin-top: 18px;">
+                        <div class="section-header">
+                            <div>
+                                <h3 class="section-title">🔊 Cài Đặt Âm Lượng & Tự Động Phát</h3>
+                                <p class="section-desc">Điều chỉnh âm lượng và hành vi phát nhạc khi người nhận mở quà</p>
+                            </div>
+                        </div>
+
+                        <div class="grid-2">
+                            <div class="form-group">
+                                <label>Âm lượng phát nhạc: <span id="bgVolumeText" style="color: var(--pink); font-family: var(--font-mono); font-weight: 700;">55%</span></label>
+                                <input type="range" id="bgVolume" min="0" max="1" step="0.05" value="0.55" style="accent-color: var(--pink); cursor: pointer; margin-top: 10px;">
+                            </div>
+
+                            <div class="switch-box" style="margin-top: 4px;">
+                                <div>
+                                    <div class="switch-box-label">Tự động phát nhạc (Auto-Play)</div>
+                                    <div class="switch-box-sub">Tự phát nhạc ngay khi người thương chạm mở quà</div>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="autoPlay" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- TAB 6: RAW JSON API -->
                 <div class="tab-content" id="tab-json" style="display: none;">
                     <div class="panel-section">
@@ -1056,14 +1151,14 @@ Cảm ơn anh vì đã luôn chở che, nhường nhịn và yêu thương em. D
                 </div>
                 <div style="display: flex; gap: 6px;">
                     <button type="button" class="btn btn-sm" id="btnReloadPreview" title="Tải lại preview">🔄</button>
-                    <a href="/gift.php?code=PVB33A62" target="_blank" class="btn btn-sm btn-ghost" id="btnOpenExternal" title="Mở toàn màn hình tab mới">↗️</a>
+                    <a href="/gift?code=PVB33A62" target="_blank" class="btn btn-sm btn-ghost" id="btnOpenExternal" title="Mở toàn màn hình tab mới">↗️</a>
                 </div>
             </div>
 
             <!-- iPhone Frame Mockup -->
             <div class="device-container">
                 <div class="device-notch"></div>
-                <iframe id="previewFrame" class="device-iframe" src="/gift.php?code=PVB33A62"></iframe>
+                <iframe id="previewFrame" class="device-iframe" src="/gift?code=PVB33A62"></iframe>
             </div>
         </aside>
     </main>
@@ -1345,6 +1440,191 @@ Cảm ơn anh vì đã luôn chở che, nhường nhịn và yêu thương em. D
             }
         }
 
+        
+        // Upload audio file via API
+        async function devUploadAudio(input) {
+            if (!input.files || !input.files[0]) return;
+            const file = input.files[0];
+            const targetVal = document.getElementById('bgMusicUrl');
+            targetVal.value = '⏳ Uploading audio...';
+            showToast(`Đang tải lên bài hát: ${file.name}...`);
+
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                const base64 = e.target.result;
+                try {
+                    const res = await fetch('/api/upload', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name: file.name, data: base64 })
+                    });
+                    const d = await res.json();
+                    if (d.success) {
+                        targetVal.value = d.url;
+                        document.getElementById('audioTrackName').innerText = file.name;
+                        document.getElementById('audioTrackUrl').innerText = d.url;
+                        document.getElementById('audioPreviewPlayer').src = d.url;
+                        showToast(`✅ Đã tải lên thành công: ${file.name}`);
+                        updateJsonEditorFromForm();
+                    } else {
+                        showToast(d.error || 'Lỗi tải audio', 'error');
+                        targetVal.value = '/uploads/demo_givemeyourforever.mp3';
+                    }
+                } catch (err) {
+                    showToast(err.message, 'error');
+                    targetVal.value = '/uploads/demo_givemeyourforever.mp3';
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Live Audio Player Controls
+        const audioPlayer = document.getElementById('audioPreviewPlayer');
+        const btnPlayAudio = document.getElementById('btnPlayPauseAudio');
+        const bgVolumeSlider = document.getElementById('bgVolume');
+        const bgVolumeLabel = document.getElementById('bgVolumeText');
+        const bgMusicInput = document.getElementById('bgMusicUrl');
+
+        if (btnPlayAudio) {
+            btnPlayAudio.addEventListener('click', () => {
+                if (audioPlayer.paused) {
+                    audioPlayer.volume = parseFloat(bgVolumeSlider.value) || 0.55;
+                    audioPlayer.play().then(() => {
+                        btnPlayAudio.innerText = '⏸';
+                    }).catch(err => {
+                        showToast('Không thể phát audio: ' + err.message, 'error');
+                    });
+                } else {
+                    audioPlayer.pause();
+                    btnPlayAudio.innerText = '▶';
+                }
+            });
+            audioPlayer.addEventListener('ended', () => {
+                btnPlayAudio.innerText = '▶';
+            });
+        }
+
+        if (bgVolumeSlider) {
+            bgVolumeSlider.addEventListener('input', (e) => {
+                const val = parseFloat(e.target.value);
+                bgVolumeLabel.innerText = Math.round(val * 100) + '%';
+                if (audioPlayer) audioPlayer.volume = val;
+            });
+        }
+
+        if (bgMusicInput) {
+            bgMusicInput.addEventListener('input', (e) => {
+                const url = e.target.value.trim();
+                if (audioPlayer && url) {
+                    audioPlayer.src = url;
+                    document.getElementById('audioTrackUrl').innerText = url;
+                }
+            });
+        }
+
+        
+        // Instant Preview sync when user pastes ANY external link into any image or audio input
+        document.addEventListener('input', (e) => {
+            const id = e.target.id;
+            const val = e.target.value.trim();
+            if (!val) return;
+
+            // Sphere inputs
+            if (id && id.startsWith('sphereVal_')) {
+                const idx = id.replace('sphereVal_', '');
+                const prev = document.getElementById(`spherePrev_${idx}`);
+                if (prev) prev.src = val;
+            }
+            // Letter photo
+            if (id === 'letterImg') {
+                const prev = document.getElementById('letterImgPrev');
+                if (prev) prev.src = val;
+            }
+            // Giftbox photo
+            if (id === 'giftBoxImg') {
+                const prev = document.getElementById('giftBoxImgPrev');
+                if (prev) prev.src = val;
+            }
+            // Particle texture
+            if (id === 'particleImg') {
+                const prev = document.getElementById('particleImgPrev');
+                if (prev) prev.src = val;
+            }
+            // Audio preview
+            if (id === 'bgMusicUrl') {
+                const ap = document.getElementById('audioPreviewPlayer');
+                if (ap) {
+                    ap.src = val;
+                    document.getElementById('audioTrackUrl').innerText = val;
+                    document.getElementById('audioTrackName').innerText = val.split('/').pop().split('?')[0] || 'Online Audio Stream';
+                }
+            }
+            updateJsonEditorFromForm();
+        });
+
+        
+        // YouTube / TikTok Audio Converter Handler
+        const btnConvert = document.getElementById('btnConvertVideoAudio');
+        const videoInput = document.getElementById('videoUrlInput');
+
+        async function convertVideoToAudio(targetUrl) {
+            const rawUrl = (targetUrl || videoInput.value).trim();
+            if (!rawUrl || !rawUrl.startsWith('http')) {
+                showToast('Vui lòng dán link YouTube hoặc TikTok hợp lệ!', 'error');
+                return;
+            }
+
+            btnConvert.disabled = true;
+            btnConvert.innerText = '⏳ Đang trích xuất MP3...';
+            showToast('Đang kết nối YouTube/TikTok và trích xuất file MP3... Vui lòng đợi vài giây!');
+
+            try {
+                const res = await fetch('/api/convert-audio', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url: rawUrl })
+                });
+                const data = await res.json();
+                if (data.success && data.url) {
+                    const targetMusicInput = document.getElementById('bgMusicUrl');
+                    targetMusicInput.value = data.url;
+                    
+                    document.getElementById('audioTrackName').innerText = data.title || 'Nhạc trích xuất';
+                    document.getElementById('audioTrackUrl').innerText = data.url;
+                    
+                    const player = document.getElementById('audioPreviewPlayer');
+                    player.src = data.url;
+
+                    showToast(`✅ Đã trích xuất thành công: ${data.title}!`);
+                    updateJsonEditorFromForm();
+                } else {
+                    showToast('Lỗi: ' + (data.error || 'Không thể trích xuất audio'), 'error');
+                }
+            } catch (err) {
+                showToast('Lỗi kết nối converter: ' + err.message, 'error');
+            } finally {
+                btnConvert.disabled = false;
+                btnConvert.innerText = '⚡ Trích Xuất MP3 Ngay';
+            }
+        }
+
+        if (btnConvert) {
+            btnConvert.addEventListener('click', () => convertVideoToAudio());
+        }
+
+        // Auto-detect YouTube / TikTok when user pastes into bgMusicUrl
+        if (bgMusicInput) {
+            bgMusicInput.addEventListener('change', (e) => {
+                const val = e.target.value.trim();
+                if (val.includes('youtube.com') || val.includes('youtu.be') || val.includes('tiktok.com')) {
+                    videoInput.value = val;
+                    if (confirm('Phát hiện link YouTube/TikTok! Bạn có muốn tự động trích xuất thành MP3 không?')) {
+                        convertVideoToAudio(val);
+                    }
+                }
+            });
+        }
+
         // Tab Switching
         const tabBtns = document.querySelectorAll('.tab-btn');
         const tabContents = document.querySelectorAll('.tab-content');
@@ -1384,7 +1664,7 @@ Cảm ơn anh vì đã luôn chở che, nhường nhịn và yêu thương em. D
         function updateCode(val) {
             const clean = val.toUpperCase().replace(/[^A-Z0-9_-]/g, '');
             giftCodeInput.value = clean;
-            previewUrlBox.value = `/gift.php?code=${clean}`;
+            previewUrlBox.value = `/gift?code=${clean}`;
         }
 
         document.getElementById('btnRandomCode').addEventListener('click', () => {
@@ -1445,9 +1725,9 @@ Cảm ơn anh vì đã luôn chở che, nhường nhịn và yêu thương em. D
                         signature: document.getElementById('letterSignature').value.trim(),
                         envColor: document.getElementById('letterEnvColor').value
                     },
-                    bgMusic: "./app/assets/music/givemeyourforever.mp3",
-                    bgVolume: 0.55,
-                    autoPlay: false,
+                    bgMusic: (document.getElementById("bgMusicUrl") ? document.getElementById("bgMusicUrl").value.trim() : "") || "/uploads/demo_givemeyourforever.mp3",
+                    bgVolume: (document.getElementById("bgVolume") ? parseFloat(document.getElementById("bgVolume").value) : 0.55) || 0.55,
+                    autoPlay: document.getElementById("autoPlay") ? document.getElementById("autoPlay").checked : true,
                     recipientName: document.getElementById('recipientName').value.trim(),
                     enableCalendar: true,
                     calendar: {
@@ -1482,7 +1762,7 @@ Cảm ơn anh vì đã luôn chở che, nhường nhịn và yêu thương em. D
                         counterLabel: document.getElementById('counterLabel').value.trim()
                     }
                 },
-                music: "./app/assets/music/givemeyourforever.mp3"
+                music: (document.getElementById("bgMusicUrl") ? document.getElementById("bgMusicUrl").value.trim() : "") || "/uploads/demo_givemeyourforever.mp3"
             };
         }
 
@@ -1507,6 +1787,20 @@ Cảm ơn anh vì đã luôn chở che, nhường nhịn và yêu thương em. D
         function applyDataToForm(d) {
             if (d.code) updateCode(d.code);
             const c = d.config || {};
+            if (c.bgMusic || d.music) {
+                const m = c.bgMusic || d.music;
+                if (document.getElementById("bgMusicUrl")) document.getElementById("bgMusicUrl").value = m;
+                if (document.getElementById("audioTrackUrl")) document.getElementById("audioTrackUrl").innerText = m;
+                if (document.getElementById("audioPreviewPlayer")) document.getElementById("audioPreviewPlayer").src = m;
+            }
+            if (typeof c.bgVolume !== "undefined" && document.getElementById("bgVolume")) {
+                document.getElementById("bgVolume").value = c.bgVolume;
+                if (document.getElementById("bgVolumeText")) document.getElementById("bgVolumeText").innerText = Math.round(c.bgVolume * 100) + "%";
+            }
+            if (typeof c.autoPlay !== "undefined" && document.getElementById("autoPlay")) {
+                document.getElementById("autoPlay").checked = !!c.autoPlay;
+            }
+            
             if (c.recipientName) document.getElementById('recipientName').value = c.recipientName;
             if (c.appTitle) document.getElementById('appTitle').value = c.appTitle;
             if (c.heartName) document.getElementById('heartName').value = c.heartName;
@@ -1610,7 +1904,7 @@ Cảm ơn anh vì đã luôn chở che, nhường nhịn và yêu thương em. D
                     applyDataToForm(data.data);
                     showToast(`Đã nạp thành công mã [${code}]`);
                     // update live preview frame
-                    document.getElementById('previewFrame').src = `/gift.php?code=${code}`;
+                    document.getElementById('previewFrame').src = `/gift?code=${code}`;
                 } else {
                     showToast(`Không tìm thấy mã: ${code}`, 'error');
                 }

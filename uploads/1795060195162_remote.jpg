@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <title>Sang dev - Shop Bán Mã Nguồn, Web Bán Hosting &amp; Domain Giá Rẻ Uy Tín</title>
+    <meta name="description" content="Sang dev - Shop bán mã nguồn uy tín số 1 Việt Nam. Web bán hosting giá rẻ NVMe siêu tốc, đăng ký domain giá rẻ, tool MMO tự động. Hỗ trợ 24/7 qua Zalo 0335764804.">
+    <meta name="keywords" content="shop bán mã nguồn, web bán hosting giá rẻ, domain giá rẻ, mua mã nguồn, mua hosting giá rẻ, mua domain giá rẻ, sang dev, source code, hosting nvme, ten mien gia re">
+    <link rel="canonical" href="https://sangdev.online/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Sang dev">
+    <meta property="og:title" content="Sang dev - Shop Bán Mã Nguồn, Web Bán Hosting &amp; Domain Giá Rẻ Uy Tín">
+    <meta property="og:description" content="Sang dev - Shop bán mã nguồn uy tín số 1 Việt Nam. Web bán hosting giá rẻ NVMe siêu tốc, đăng ký domain giá rẻ, tool MMO tự động. Hỗ trợ 24/7 qua Zalo 0335764804.">
+    <meta property="og:url" content="https://sangdev.online/">
+    <meta property="og:image" content="https://sangdev.online/img/gd-logo.png">
+    <meta property="og:image:alt" content="Sang dev - Shop Bán Mã Nguồn, Web Bán Hosting &amp; Domain Giá Rẻ Uy Tín">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Sang dev - Shop Bán Mã Nguồn, Web Bán Hosting &amp; Domain Giá Rẻ Uy Tín">
+    <meta name="twitter:description" content="Sang dev - Shop bán mã nguồn uy tín số 1 Việt Nam. Web bán hosting giá rẻ NVMe siêu tốc, đăng ký domain giá rẻ, tool MMO tự động. Hỗ trợ 24/7 qua Zalo 0335764804.">
+    <meta name="twitter:image" content="https://sangdev.online/img/gd-logo.png">
+    <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://sangdev.online/#website","url":"https://sangdev.online/","name":"Sang dev","description":"Shop Bán Mã Nguồn, Web Bán Hosting & Domain Giá Rẻ Uy Tín","potentialAction":{"@type":"SearchAction","target":"https://sangdev.online/manguon?search={search_term_string}","query-input":"required name=search_term_string"}},{"@type":"OnlineStore","@id":"https://sangdev.online/#store","name":"Sang dev","url":"https://sangdev.online/","logo":"https://sangdev.online/img/gd-logo.png","description":"Shop bán mã nguồn uy tín số 1 Việt Nam, web bán hosting giá rẻ NVMe, đăng ký domain giá rẻ.","telephone":"0335764804","contactPoint":{"@type":"ContactPoint","telephone":"0335764804","contactType":"customer service","availableLanguage":["Vietnamese"]}}]}</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+
+    <!-- Open Graph / Facebook / Zalo Link Preview -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <!-- Twitter / X Link Preview -->
+    
+    
+    
+    
+
+    <!-- Schema.org Rich Structured Data -->
+    
+
+    <link rel="icon" type="image/x-icon" href="/img/icon.ico">
+    <link rel="icon" type="image/png" href="/img/icon.ico">
+    <link rel="apple-touch-icon" href="/img/icon.ico">
+    <style>
+        html body {
+            opacity: 0;
+        }
+        html.protected-assets-ready body {
+            opacity: 1;
+            transition: opacity 0.18s ease;
+        }
+    </style>
+    <script>
+        (function initTheme() {
+            try {
+                const storageKey = 'site-theme-mode';
+                const saved = localStorage.getItem(storageKey);
+                const theme = saved === 'light' || saved === 'dark' ? saved : 'dark';
+                document.documentElement.dataset.theme = theme;
+                document.documentElement.style.colorScheme = theme;
+            } catch (_) {
+                document.documentElement.dataset.theme = 'dark';
+                document.documentElement.style.colorScheme = 'dark';
+            }
+        })();
+    </script>
+
+    <!-- Block DevTools before page loading -->
+    <script src="https://cdn.jsdelivr.net/npm/disable-devtool@latest"></script>
+    <script>
+        (function() {
+            try {
+                const hostname = window.location.hostname;
+                const isLocal = hostname === 'localhost' || 
+                                hostname === '127.0.0.1' || 
+                                hostname === '[::1]' || 
+                                hostname.startsWith('192.168.') || 
+                                hostname.startsWith('10.') || 
+                                /^172\.(1[6-9]|2\d|3[0-1])\./.test(hostname) ||
+                                hostname.endsWith('.local');
+                
+                var userRaw = localStorage.getItem('user');
+                var isAdmin = false;
+                try { isAdmin = JSON.parse(userRaw)?.role === 'admin'; } catch(e) {}
+
+                if (isLocal || isAdmin) {
+                    console.log('Admin / Local development environment detected. DevTools blocker disabled.');
+                    return;
+                }
+
+                const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|Tablet/i.test(navigator.userAgent || '') || 
+                                 (('ontouchstart' in window) && window.innerWidth <= 992);
+                
+                if (isMobile) {
+                    return;
+                }
+
+                if (typeof DisableDevtool !== 'undefined') {
+                    DisableDevtool({
+                        ondevtoolopen: (type) => {
+                            window.location.href = 'about:blank';
+                        },
+                        clearIntervalWhenOpen: true,
+                        clearLog: true,
+                        disableMenu: false,
+                        disableMobile: true
+                    });
+                }
+            } catch (err) {
+                // Fail silently to not impact normal user experience
+            }
+        })();
+    </script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Identity Services -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="/js/config.js?v=2026110722"></script>
+    <script src="/js/asset-loader.js?v=2026110722"></script>
+    <!-- CKEditor 5 (Cloudflare Edge CDN siêu tốc ~247KB, dự phòng bundle nội bộ) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ckeditor5/41.4.2/ckeditor.min.js" onerror="this.onerror=null;this.src='/libs/ckeditor5.js';"></script>
+
+    <!-- Sự kiện Quốc Khánh 2/9 (Hoạt động đến hết 02/09/2026, tự động ngắt từ 00:00 ngày 03/09/2026) -->
+    <script>
+        (function() {
+            try {
+                var now = new Date();
+                var utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+                var vnDate = new Date(utc + (7 * 3600000));
+                // Hạn chót: Bước sang ngày 03/09/2026 (00:00:00 GMT+7) sẽ ngừng hoạt động
+                var deadline = new Date(2026, 8, 3, 0, 0, 0);
+
+                if (vnDate < deadline) {
+                    if (document.readyState === 'loading') {
+                        document.write('<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/trivy31122012-code/su-kien@main/qk.css">');
+                        document.write('<script src="https://cdn.jsdelivr.net/gh/trivy31122012-code/su-kien@main/qk.js"><\/script>');
+                    } else {
+                        var link = document.createElement('link');
+                        link.rel = 'stylesheet';
+                        link.href = 'https://cdn.jsdelivr.net/gh/trivy31122012-code/su-kien@main/qk.css';
+                        document.head.appendChild(link);
+
+                        var script = document.createElement('script');
+                        script.src = 'https://cdn.jsdelivr.net/gh/trivy31122012-code/su-kien@main/qk.js';
+                        document.head.appendChild(script);
+                    }
+                }
+            } catch (err) {
+                console.warn('Lỗi kiểm tra thời gian sự kiện 2/9:', err);
+            }
+        })();
+    </script>
+</head>
+<body>
+    <!-- Header (load động) -->
+    <header id="header-container"></header>
+
+    <!-- Main Content - VÙNG THAY ĐỔI KHÔNG BAO GIỜ RELOAD -->
+    <main id="main-content">
+        <div class="loading-container">
+            <img class="spinner" src="/img/gif_loaderB46.png" alt="Đang tải">
+            <p>Đang tải...</p>
+        </div>
+    </main>
+
+    <!-- Footer (load động) -->
+    <footer id="footer-container"></footer>
+
+    
+    <div id="toast-container"></div>
+    <script src="/js/security.js"></script>
+    <script src="/js/utils.js"></script>
+    <script src="/js/api.js?v=2026110722"></script>
+    <script src="/js/public-ip.js"></script>
+    <script src="/js/recaptcha.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/router.js?v=2026110722"></script>
+    <script src="/js/app.js?v=2026110722"></script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"4fb142e836b9462298b5ce72130180a1","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>
