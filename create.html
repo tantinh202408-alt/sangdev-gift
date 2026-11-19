@@ -1946,7 +1946,20 @@ Cảm ơn anh vì đã luôn chở che, nhường nhịn và yêu thương em. D
                     showToast(data.error || 'Deploy failed', 'error');
                 }
             } catch (e) {
-                showToast(e.message, 'error');
+                // Fallback for Netlify / Static hosting: generate direct encoded URL!
+                try {
+                    const dataParam = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+                    const fullUrl = window.location.origin + '/?data=' + dataParam;
+                    document.getElementById('modalCodeBadge').innerText = payload.code || 'CUSTOM';
+                    document.getElementById('modalLinkInput').value = fullUrl;
+                    document.getElementById('btnModalOpen').href = fullUrl;
+                    document.getElementById('successModal').classList.add('active');
+                    document.getElementById('previewFrame').src = fullUrl;
+                    document.getElementById('btnOpenExternal').href = fullUrl;
+                    showToast('Đã tạo link chia sẻ trực tiếp (Netlify Mode)!');
+                } catch (err2) {
+                    showToast(e.message, 'error');
+                }
             } finally {
                 btn.disabled = false;
                 btn.innerText = '⚡ DEPLOY QUÀ TẶNG (CTRL+S)';

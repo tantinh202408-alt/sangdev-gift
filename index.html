@@ -48,6 +48,27 @@ body.tpl-body-mon-qua-nho-2010 .gift-brand { position: fixed; left: 0; right: 0;
 .gift-app-frame { position: fixed; inset: 0; width: 100%; height: 100%; border: 0; z-index: 1; background: #0b0a12; }
 </style>
 <script>window.__GIFTTO_APP = {"config":{"appTitle":"Món Quà Nhỏ 19/11 - Dành riêng cho Anh 🎁","appIcon":"./app/assets/images/icons/couple.png","enableWebsiteInfo":true,"enablePasscode":false,"passcode":"1911","passcodeTitle":"Nhập mật khẩu","passcodeSubtitle":"Gợi ý: Ngày Quốc tế Nam giới (4 số)","enableMorphEffect":true,"morphTexts":["Chúc mừng","Ngày Quốc tế Nam giới","19 tháng 11","Cảm ơn anh vì tất cả"],"particleImage":"./app/assets/demo/particle.png","particleImageShape":"heart","particleColor":"#f5b82e","heartName":"Anh Yêu","enableSphere":true,"sphereImages":["./app/assets/demo/sphere-0.jpg","./app/assets/demo/sphere-1.jpg","./app/assets/demo/sphere-2.jpg","./app/assets/demo/sphere-3.jpg","./app/assets/demo/sphere-4.jpg","./app/assets/demo/sphere-5.jpg"],"enableSphereFlyingImages":true,"flyingCaptions":["Thương anh nhất 💕","Điểm tựa của em 🥰","Luôn vững vàng nhé ✨","Mãi bên nhau nhé 💑","Happy Men's Day 19/11 🎁"],"enableLetter":true,"letter":{"title":"Gửi anh yêu!","text":"Nhân ngày Quốc tế Nam giới 19/11, chúc người đàn ông của em luôn mạnh khỏe, bình an, vững vàng và hạnh phúc trên mọi chặng đường.\n\nCảm ơn anh vì đã luôn chở che, nhường nhịn và yêu thương em. Dù ngoài kia có bận rộn thế nào, về bên em luôn có sự dịu dàng chờ anh nhé! ❤️","image":"./app/assets/demo/letter.png","caption":"Mình mãi bên nhau anh nhé ♥","signature":"Người thương của anh ♥","envColor":"navy"},"bgMusic":"./app/assets/music/givemeyourforever.mp3","bgVolume":0.55,"autoPlay":false,"recipientName":"Anh Yêu","enableCalendar":true,"calendar":{"day":19,"month":11,"title":"Ngày Quốc tế Nam giới","caption":"Ngày của anh ♥"},"enableBouquet":true,"bouquet":{"count":9,"color":"red","title":"Tặng anh bó hoa không bao giờ tàn","meaning":"Mãi mãi bên nhau","subtitle":"Cảm ơn anh vì đã luôn là điểm tựa vững chắc và dịu dàng nhất của em."},"enableGiftBox":true,"giftBox":{"color":"navy","message":"Tối 19/11, 7 giờ — mình đi ăn tối kỷ niệm nhé anh! Em khao! 🥂✨","image":"./app/assets/demo/giftbox.jpg"},"enableFinale":true,"finale":{"texts":["19.11","Thương Anh","Mãi Bên Nhau"],"message":"Cảm ơn anh vì đã đến bên em","loveStart":"2024-02-14","counterLabel":"Mình đã bên nhau"}},"music":"./app/assets/music/givemeyourforever.mp3"};</script>
+<script>
+(function() {
+    var params = new URLSearchParams(window.location.search);
+    var code = params.get('code');
+    var rawData = params.get('data');
+    if (rawData) {
+        try {
+            window.__GIFTTO_APP = JSON.parse(decodeURIComponent(escape(atob(rawData))));
+        } catch(e) {}
+    } else if (code && code !== 'PVB33A62') {
+        fetch('/data/' + encodeURIComponent(code.toUpperCase()) + '.json')
+            .then(function(r) { return r.json(); })
+            .then(function(d) {
+                window.__GIFTTO_APP = d;
+                var frame = document.querySelector('.gift-app-frame');
+                if (frame) frame.src = frame.src;
+            })
+            .catch(function(e) {});
+    }
+})();
+</script>
 <iframe class="gift-app-frame" src="./app/index.html" title="Món Quà Nhỏ VIP · Bó Hoa, Thẻ Cào &amp; Pháo Hoa 3D 🎁"
         allow="autoplay; fullscreen; clipboard-write; web-share" allowfullscreen></iframe>
 </main>
