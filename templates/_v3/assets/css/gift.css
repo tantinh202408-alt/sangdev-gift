@@ -1,0 +1,136 @@
+/* ====== Khung trang xem quà (dùng chung cho mọi mẫu) ====== */
+* { box-sizing: border-box; }
+
+html, body {
+    margin: 0; padding: 0; min-height: 100%;
+    font-family: 'Be Vietnam Pro', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    background: #12071d; color: #fff; overflow-x: hidden;
+}
+
+body.gift-body { display: flex; flex-direction: column; min-height: 100vh; }
+
+.gift-stage { position: relative; flex: 1; display: flex; align-items: center; justify-content: center; padding: 24px 16px; }
+
+/* Nút nhạc nổi */
+.gift-music {
+    position: fixed; top: 16px; right: 16px; z-index: 60;
+    width: 46px; height: 46px; border-radius: 50%; border: 0; cursor: pointer;
+    background: rgba(255, 255, 255, .16); color: #fff; font-size: 1.15rem;
+    backdrop-filter: blur(8px); display: grid; place-items: center;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, .3); transition: transform .2s ease, background .2s ease;
+}
+.gift-music:hover { transform: scale(1.08); background: rgba(255, 255, 255, .28); }
+.gift-music.is-playing span { animation: gift-spin 3.5s linear infinite; display: block; }
+@keyframes gift-spin { to { transform: rotate(360deg); } }
+
+/* Watermark + CTA cuối trang */
+.gift-brand {
+    position: relative; z-index: 40; text-align: center; padding: 18px 16px 26px;
+}
+/* CTA lan truyền: mời người nhận tự tạo quà — vòng lặp tăng trưởng chính. */
+.gift-brand-cta {
+    display: inline-flex; align-items: center; gap: 12px; max-width: 420px;
+    text-align: left; text-decoration: none;
+    padding: 12px 18px; border-radius: 999px;
+    background: rgba(255, 255, 255, .14); border: 1px solid rgba(255, 255, 255, .3);
+    color: #fff; backdrop-filter: blur(8px);
+    box-shadow: 0 10px 30px -12px rgba(0, 0, 0, .55);
+    transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
+    animation: gbPulse 3.2s ease-in-out infinite;
+}
+.gift-brand-cta:hover { transform: translateY(-2px); background: rgba(255, 255, 255, .22); box-shadow: 0 16px 40px -14px rgba(0, 0, 0, .6); }
+.gift-brand-cta .gb-emoji { font-size: 1.6rem; line-height: 1; flex: 0 0 auto; }
+.gift-brand-cta .gb-text { display: flex; flex-direction: column; line-height: 1.25; }
+.gift-brand-cta .gb-text b { font-size: .9rem; font-weight: 800; }
+.gift-brand-cta .gb-text em { font-size: .76rem; font-style: normal; opacity: .82; }
+.gift-brand-cta .gb-arrow { margin-left: auto; font-size: 1.15rem; font-weight: 800; flex: 0 0 auto; }
+@keyframes gbPulse {
+    0%, 100% { box-shadow: 0 10px 30px -12px rgba(0, 0, 0, .55); }
+    50%      { box-shadow: 0 10px 34px -8px rgba(255, 120, 170, .55); }
+}
+.gift-brand-note { margin-top: 10px; font-size: .74rem; color: rgba(255, 255, 255, .55); }
+.gift-brand-note a { color: rgba(255, 255, 255, .9); font-weight: 700; text-decoration: none; border-bottom: 1px dashed rgba(255, 255, 255, .45); }
+@media (prefers-reduced-motion: reduce) { .gift-brand-cta { animation: none; } }
+
+/* ====== Nút lan truyền trên quà thật ("Tạo món quà giống vậy") ======
+   Ba quy tắc chống che nội dung món quà:
+   1. Khung ngoài fixed nhưng pointer-events:none, chỉ viên pill bắt chạm — mẫu điều
+      khiển bằng vuốt (xoay 3D, lật thiệp) vẫn vuốt được ngay trên dải này.
+   2. z-index 55: dưới nút nhạc (60) nên không chồng lên nhau, và dưới màn "chạm để mở
+      quà" (90) nên lúc quà chưa mở thì không thấy nút nào cả.
+   3. Hiện trễ 6 giây: khoảnh khắc mở quà là của người tặng, không phải của quảng cáo. */
+.gift-remix {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 55;
+    /* Nép GÓC TRÁI. Đã thử hai chỗ kia và đều đụng nút của mẫu: để giữa thì che nút
+       "Giữ để bắt đầu" (womens-day), nép phải thì đụng nút play video (christmas-gift)
+       và nút nhạc của khung. Góc dưới trái là chỗ duy nhất chưa mẫu nào dùng tới. */
+    display: flex; justify-content: flex-start;
+    padding: 0 12px max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+    pointer-events: none;
+    opacity: 0; animation: giftRemixIn .45s ease 6s forwards;
+}
+.gift-remix-btn {
+    pointer-events: auto;
+    display: inline-flex; align-items: center; gap: 8px;
+    max-width: min(92vw, 340px);
+    padding: 9px 16px; border-radius: 999px;
+    background: rgba(20, 12, 28, .58); border: 1px solid rgba(255, 255, 255, .28);
+    color: #fff; text-decoration: none; font-size: .84rem; font-weight: 700;
+    backdrop-filter: blur(10px); box-shadow: 0 10px 26px -12px rgba(0, 0, 0, .6);
+}
+.gift-remix-btn .gr-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.gift-remix-btn .gr-arrow { font-weight: 800; }
+@keyframes giftRemixIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .gift-remix { animation: none; opacity: 1; } }
+/* Phòng khi sau này có gói bật lại watermark: hai khối không được chồng lên nhau. */
+.gift-brand ~ .gift-remix { position: relative; padding-top: 0; animation: none; opacity: 1; }
+
+/* Thanh xem thử trong trình chỉnh sửa */
+.gift-preview-flag {
+    position: fixed; left: calc(12px + env(safe-area-inset-left, 0px)); top: calc(12px + env(safe-area-inset-top, 0px)); transform: none; z-index: 70;
+    background: rgba(0, 0, 0, .48); color: rgba(255, 255, 255, .88); padding: 4px 12px; border-radius: 999px;
+    font-size: .68rem; font-weight: 700; letter-spacing: .06em; backdrop-filter: blur(6px);
+    pointer-events: none;
+}
+
+/* Màn hình mở quà (chạm để bắt đầu) */
+.gift-opener {
+    position: fixed; inset: 0; z-index: 90; display: grid; place-items: center; text-align: center;
+    background: radial-gradient(circle at 50% 40%, #3a1d4d, #12071d 70%);
+    cursor: pointer; transition: opacity .55s ease, visibility .55s ease; padding: 24px;
+}
+.gift-opener.is-hidden { opacity: 0; visibility: hidden; }
+.gift-opener .box { font-size: clamp(4rem, 18vw, 7rem); animation: gift-shake 2.2s ease-in-out infinite; }
+.gift-opener p { font-size: 1.05rem; opacity: .85; margin: 14px 0 0; }
+.gift-opener h2 { font-size: clamp(1.3rem, 5vw, 1.9rem); margin: 18px 0 0; font-weight: 800; }
+@keyframes gift-shake {
+    0%, 100% { transform: rotate(0) scale(1); }
+    20% { transform: rotate(-8deg) scale(1.05); }
+    40% { transform: rotate(8deg) scale(1.05); }
+    60% { transform: rotate(-5deg) scale(1.02); }
+    80% { transform: rotate(5deg) scale(1.02); }
+}
+
+/* Trang lỗi / hết hạn */
+.gift-notice { max-width: 480px; margin: auto; text-align: center; padding: 40px 24px; }
+.gift-notice .emoji { font-size: 4rem; margin-bottom: 12px; }
+.gift-notice h1 { font-size: 1.6rem; margin: 0 0 10px; }
+.gift-notice p { opacity: .8; margin-bottom: 22px; }
+.gift-notice .btn {
+    display: inline-block; padding: 12px 26px; border-radius: 999px; font-weight: 700; text-decoration: none;
+    background: linear-gradient(135deg, #ef5f86, #7c4ddb); color: #fff;
+}
+
+/* Đồng hồ dùng chung cho các mẫu có đếm ngày.
+   Mỗi ô là một <span> chứa cặp số + nhãn để chúng luôn nằm chồng lên nhau. */
+.gift-counter { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.gift-counter > span { text-align: center; }
+.gift-counter b {
+    display: block; font-size: clamp(1.3rem, 5vw, 2rem); line-height: 1; font-weight: 900;
+    background: rgba(255, 255, 255, .14); border-radius: 14px; padding: 12px 14px; min-width: 66px;
+}
+.gift-counter small { display: block; font-size: .66rem; opacity: .75; margin: 6px 0 0; text-transform: uppercase; letter-spacing: .08em; }
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}

@@ -1,0 +1,9 @@
+{
+  "code": "DEMO1234",
+  "createdAt": "2026-11-19T01:19:57.758Z",
+  "config": {
+    "appTitle": "Món Quà Tình Yêu Thử Nghiệm",
+    "recipientName": "Em Yêu"
+  },
+  "music": "./app/assets/music/givemeyourforever.mp3"
+}

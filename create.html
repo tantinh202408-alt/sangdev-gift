@@ -1,0 +1,1705 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DearGift 3D Studio · Developer Edition ⚡</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-app: #09090b;
+            --bg-surface: #121118;
+            --bg-card: #181622;
+            --bg-card-hover: #201d2e;
+            --bg-input: #0e0d15;
+            
+            --border-subtle: #272535;
+            --border-hover: #3d3a52;
+            --border-focus: #ec4899;
+
+            --pink: #ec4899;
+            --pink-glow: rgba(236, 72, 153, 0.35);
+            --violet: #8b5cf6;
+            --cyan: #06b6d4;
+            --emerald: #10b981;
+            --amber: #f59e0b;
+
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-tertiary: #64748b;
+            
+            --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            --font-mono: 'Fira Code', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-app);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(236, 72, 153, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 85% 85%, rgba(139, 92, 246, 0.08) 0%, transparent 40%);
+        }
+
+        /* Top Navigation Bar */
+        .topbar {
+            height: 64px;
+            background: rgba(18, 17, 24, 0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .brand-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-logo {
+            width: 34px;
+            height: 34px;
+            background: linear-gradient(135deg, var(--pink), var(--violet));
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            box-shadow: 0 0 15px var(--pink-glow);
+        }
+
+        .brand-name {
+            font-weight: 800;
+            font-size: 1.15rem;
+            letter-spacing: -0.5px;
+            background: linear-gradient(to right, #ffffff, #cbd5e1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .badge-dev {
+            background: rgba(139, 92, 246, 0.15);
+            color: #a78bfa;
+            border: 1px solid rgba(139, 92, 246, 0.35);
+            font-family: var(--font-mono);
+            font-size: 0.68rem;
+            font-weight: 600;
+            padding: 2px 7px;
+            border-radius: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            font-family: var(--font-sans);
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            white-space: nowrap;
+        }
+
+        .btn:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--border-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--pink), #e11d48);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            box-shadow: 0 4px 14px var(--pink-glow);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #f43f5e, #be123c);
+            box-shadow: 0 6px 20px rgba(236, 72, 153, 0.5);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            border-color: transparent;
+            color: var(--text-secondary);
+        }
+
+        .btn-ghost:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 0.78rem;
+            border-radius: 6px;
+        }
+
+        /* Main Workspace: Split Studio Layout */
+        .studio-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1.2fr) minmax(380px, 480px);
+            gap: 24px;
+            max-width: 1600px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 24px;
+            flex: 1;
+        }
+
+        @media (max-width: 1080px) {
+            .studio-layout {
+                grid-template-columns: 1fr;
+            }
+            .preview-pane {
+                display: none !important;
+            }
+        }
+
+        /* Left Pane (Controls) */
+        .editor-pane {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Segmented Tabs */
+        .tab-bar {
+            display: flex;
+            background: var(--bg-surface);
+            padding: 4px;
+            border-radius: 10px;
+            border: 1px solid var(--border-subtle);
+            overflow-x: auto;
+            gap: 4px;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 0.82rem;
+            font-weight: 600;
+            padding: 8px 14px;
+            border-radius: 7px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .tab-btn.active {
+            background: var(--bg-card-hover);
+            color: #fff;
+            border: 1px solid var(--border-hover);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Studio Cards */
+        .panel-section {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            position: relative;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .section-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-primary);
+        }
+
+        .section-desc {
+            font-size: 0.8rem;
+            color: var(--text-tertiary);
+            margin-top: 2px;
+        }
+
+        /* Form Grid */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        select,
+        textarea {
+            background: var(--bg-input);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            color: #fff;
+            padding: 9px 12px;
+            font-size: 0.88rem;
+            font-family: var(--font-sans);
+            outline: none;
+            transition: all 0.15s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        input[type="date"]:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.18);
+            background: #110f1a;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+            line-height: 1.5;
+        }
+
+        /* Mono Code Inputs */
+        .code-input {
+            font-family: var(--font-mono) !important;
+            letter-spacing: 1px;
+            color: var(--cyan) !important;
+            font-weight: 600;
+        }
+
+        /* Toggle Switches */
+        .switch-box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 14px;
+            background: var(--bg-card);
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .switch-box-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .switch-box-sub {
+            font-size: 0.74rem;
+            color: var(--text-tertiary);
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 22px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            inset: 0;
+            background-color: #272535;
+            transition: .25s;
+            border-radius: 20px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .25s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--pink);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(18px);
+        }
+
+        /* Photo Upload Cards */
+        .media-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 12px;
+        }
+
+        .media-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 9px;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            position: relative;
+            transition: border-color 0.2s;
+        }
+
+        .media-card:hover {
+            border-color: var(--border-hover);
+        }
+
+        .media-thumb {
+            width: 100%;
+            height: 100px;
+            background: #08070d;
+            border-radius: 6px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .media-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .media-thumb:hover img {
+            transform: scale(1.08);
+        }
+
+        .media-label {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .upload-input-file {
+            display: none;
+        }
+
+        /* Right Pane: Phone Mockup */
+        .preview-pane {
+            position: sticky;
+            top: 84px;
+            height: calc(100vh - 108px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .device-container {
+            width: 100%;
+            max-width: 375px;
+            height: 100%;
+            background: #000;
+            border-radius: 40px;
+            border: 7px solid #272535;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), 0 0 30px rgba(236, 72, 153, 0.15);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .device-notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 110px;
+            height: 22px;
+            background: #272535;
+            border-bottom-left-radius: 14px;
+            border-bottom-right-radius: 14px;
+            z-index: 50;
+        }
+
+        .device-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #0b0a12;
+        }
+
+        .preview-toolbar {
+            width: 100%;
+            max-width: 375px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding: 0 4px;
+        }
+
+        .preview-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            color: var(--emerald);
+            font-family: var(--font-mono);
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            background: var(--emerald);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--emerald);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        /* JSON Code Editor Tab */
+        .json-editor {
+            width: 100%;
+            height: 520px;
+            background: #09090d;
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            color: #38bdf8;
+            font-family: var(--font-mono);
+            font-size: 0.84rem;
+            padding: 16px;
+            line-height: 1.6;
+            outline: none;
+            tab-size: 2;
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .toast {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            padding: 12px 18px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.88rem;
+            color: #fff;
+            animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .toast.success { border-color: var(--emerald); }
+        .toast.error { border-color: #ef4444; }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Modal Overlay */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.82);
+            backdrop-filter: blur(12px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--pink);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(236, 72, 153, 0.2);
+            border-radius: 18px;
+            max-width: 520px;
+            width: 100%;
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Bar -->
+    <header class="topbar">
+        <div class="brand-group">
+            <div class="brand-logo">🎁</div>
+            <div>
+                <span class="brand-name">DEARGIFT STUDIO</span>
+                <span class="badge-dev">DEV V2.4</span>
+            </div>
+        </div>
+
+        <div class="topbar-actions">
+            <!-- Preset templates dropdown -->
+            <select id="presetSelector" class="btn btn-sm" style="background: var(--bg-card); cursor: pointer;">
+                <option value="1911">⚡ Mẫu: 19/11 (Quốc tế Nam giới)</option>
+                <option value="2010">🌸 Mẫu: 20/10 & 8/3 (Phụ nữ)</option>
+                <option value="valentine">💖 Mẫu: 14/02 Valentine</option>
+                <option value="birthday">🎂 Mẫu: Sinh Nhật Ngọt Ngào</option>
+            </select>
+
+            <button type="button" class="btn btn-sm btn-ghost" id="btnCopyCurl">
+                📋 cURL API
+            </button>
+
+            <button type="button" class="btn btn-primary" id="btnDeployTop">
+                ⚡ DEPLOY QUÀ TẶNG (CTRL+S)
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="studio-layout">
+        <!-- Left: Studio Config Form -->
+        <section class="editor-pane">
+            
+            <!-- Segmented Navigation Tabs -->
+            <div class="tab-bar">
+                <button type="button" class="tab-btn active" data-tab="tab-core">🏷️ Core & Code</button>
+                <button type="button" class="tab-btn" data-tab="tab-media">📸 3D Media & Sphere</button>
+                <button type="button" class="tab-btn" data-tab="tab-content">💌 Letter & Calendar</button>
+                <button type="button" class="tab-btn" data-tab="tab-bouquet">🌹 Bouquet & Card</button>
+                <button type="button" class="tab-btn" data-tab="tab-finale">🎆 Finale 3D</button>
+                <button type="button" class="tab-btn" data-tab="tab-json">💻 Raw JSON API</button>
+            </div>
+
+            <form id="studioForm">
+                <!-- TAB 1: CORE & CODE -->
+                <div class="tab-content" id="tab-core">
+                    <div class="panel-section">
+                        <div class="section-header">
+                            <div>
+                                <h3 class="section-title">🔑 Mã Quà Tặng (Unique Access Code)</h3>
+                                <p class="section-desc">Mã định danh URL quà tặng: /gift.php?code={CODE}</p>
+                            </div>
+                            <div style="display: flex; gap: 8px;">
+                                <button type="button" class="btn btn-sm" id="btnRandomCode">🎲 Random</button>
+                                <button type="button" class="btn btn-sm" id="btnFetchCode">📥 Nạp mã này</button>
+                            </div>
+                        </div>
+
+                        <div class="grid-2">
+                            <div class="form-group">
+                                <label>GIFT CODE</label>
+                                <input type="text" id="giftCode" class="code-input" value="PVB33A62" maxlength="16" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Đường dẫn truy cập</label>
+                                <input type="text" id="previewUrlBox" class="code-input" readonly value="/gift.php?code=PVB33A62" style="color: var(--text-tertiary) !important;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel-section" style="margin-top: 18px;">
+                        <div class="section-header">
+                            <div>
+                                <h3 class="section-title">✨ Thông Tin Hiển Thị & Trái Tim 3D</h3>
+                                <p class="section-desc">Tiêu đề, hạt ánh sáng và chữ nổi trung tâm 3D</p>
+                            </div>
+                        </div>
+
+                        <div class="grid-2">
+                            <div class="form-group">
+                                <label>Tên Người Nhận</label>
+                                <input type="text" id="recipientName" value="Anh Yêu" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Tiêu Đề Trang (Title Bar)</label>
+                                <input type="text" id="appTitle" value="Món Quà Nhỏ 19/11 - Dành riêng cho Anh 🎁" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Tên trong Trái Tim Bay 3D</label>
+                                <input type="text" id="heartName" value="Anh Yêu" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Màu Hạt Sáng Trái Tim (Hex)</label>
+                                <div style="display: flex; gap: 8px; align-items: center;">
+                                    <input type="color" id="particleColorPicker" value="#f5b82e" style="background: none; border: none; width: 36px; height: 36px; cursor: pointer;">
+                                    <input type="text" id="particleColor" value="#f5b82e" class="code-input" style="flex: 1;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group full" style="margin-top: 6px;">
+                            <label>Hiệu Ứng Chữ Biến Hình Hạt 3D (Morph Texts)</label>
+                            <div class="grid-2" style="margin-top: 4px;">
+                                <input type="text" id="morph0" value="Chúc mừng" placeholder="Dòng 1">
+                                <input type="text" id="morph1" value="Ngày Quốc tế Nam giới" placeholder="Dòng 2">
+                                <input type="text" id="morph2" value="19 tháng 11" placeholder="Dòng 3">
+                                <input type="text" id="morph3" value="Cảm ơn anh vì tất cả" placeholder="Dòng 4">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel-section" style="margin-top: 18px;">
+                        <div class="switch-box">
+                            <div>
+                                <div class="switch-box-label">🔒 Mật Khẩu Khóa Quà Tặng (Passcode Shield)</div>
+                                <div class="switch-box-sub">Bắt buộc người nhận nhập đúng mật mã mới được mở quà</div>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="enablePasscode">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="grid-3" id="passcodeArea" style="margin-top: 10px;">
+                            <div class="form-group">
+                                <label>Mật Mã (Passcode)</label>
+                                <input type="text" id="passcode" value="1911" class="code-input">
+                            </div>
+                            <div class="form-group">
+                                <label>Tiêu đề màn khóa</label>
+                                <input type="text" id="passcodeTitle" value="Nhập mật khẩu">
+                            </div>
+                            <div class="form-group">
+                                <label>Gợi ý mật mã</label>
+                                <input type="text" id="passcodeSubtitle" value="Gợi ý: Ngày Quốc tế Nam giới (4 số)">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 2: MEDIA & SPHERE -->
+                <div class="tab-content" id="tab-media" style="display: none;">
+                    <div class="panel-section">
+                        <div class="section-header">
+                            <div>
+                                <h3 class="section-title">🌐 6 Ảnh Quả Cầu Xoay 3D (Sphere Orbit Images)</h3>
+                                <p class="section-desc">Tất cả ảnh được đẩy lên API và lưu trữ dưới dạng link (/uploads/...)</p>
+                            </div>
+                            <div style="display: flex; gap: 8px;">
+                                <label class="btn btn-sm btn-primary" style="cursor: pointer;">
+                                    ⚡ Tải cùng lúc 6 ảnh
+                                    <input type="file" multiple accept="image/*" class="upload-input-file" onchange="devUploadMultiple(this)">
+                                </label>
+                                <button type="button" class="btn btn-sm" onclick="promptImportUrl()">
+                                    🔗 Nhập link web
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="media-grid" id="sphereMediaGrid">
+                            <!-- 6 cards rendered dynamically -->
+                        </div>
+
+                        <div class="form-group full" style="margin-top: 16px;">
+                            <label>5 Câu Chú Thích Bay Lên Khi Xoay Quả Cầu (Flying Captions)</label>
+                            <div class="grid-2" style="margin-top: 6px;">
+                                <input type="text" id="cap0" value="Thương anh nhất 💕">
+                                <input type="text" id="cap1" value="Điểm tựa của em 🥰">
+                                <input type="text" id="cap2" value="Luôn vững vàng nhé ✨">
+                                <input type="text" id="cap3" value="Mãi bên nhau nhé 💑">
+                                <input type="text" id="cap4" value="Happy Men's Day 19/11 🎁" style="grid-column: 1 / -1;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel-section" style="margin-top: 18px;">
+                        <div class="section-header">
+                            <div>
+                                <h3 class="section-title">📸 Hình Ảnh Bổ Trợ (Letter, Box, Particles)</h3>
+                                <p class="section-desc">Các bức ảnh gắn với từng phân cảnh tương tác</p>
+                            </div>
+                        </div>
+
+                        <div class="grid-3">
+                            <!-- Letter Photo -->
+                            <div class="media-card">
+                                <div class="media-thumb">
+                                    <img id="letterImgPrev" src="/uploads/demo_letter.png">
+                                </div>
+                                <div class="media-label">Ảnh Trong Bức Thư</div>
+                                <input type="text" id="letterImg" value="/uploads/demo_letter.png" style="font-size: 0.72rem; padding: 4px 6px;">
+                                <label class="btn btn-sm btn-primary" style="cursor: pointer; width: 100%;">
+                                    📁 Tải ảnh
+                                    <input type="file" accept="image/*" class="upload-input-file" onchange="devUpload(this, 'letterImg', 'letterImgPrev')">
+                                </label>
+                            </div>
+
+                            <!-- GiftBox Photo -->
+                            <div class="media-card">
+                                <div class="media-thumb">
+                                    <img id="giftBoxImgPrev" src="/uploads/demo_giftbox.jpg">
+                                </div>
+                                <div class="media-label">Ảnh Trong Thẻ Cào</div>
+                                <input type="text" id="giftBoxImg" value="/uploads/demo_giftbox.jpg" style="font-size: 0.72rem; padding: 4px 6px;">
+                                <label class="btn btn-sm btn-primary" style="cursor: pointer; width: 100%;">
+                                    📁 Tải ảnh
+                                    <input type="file" accept="image/*" class="upload-input-file" onchange="devUpload(this, 'giftBoxImg', 'giftBoxImgPrev')">
+                                </label>
+                            </div>
+
+                            <!-- Particle Photo -->
+                            <div class="media-card">
+                                <div class="media-thumb">
+                                    <img id="particleImgPrev" src="/uploads/demo_particle.png">
+                                </div>
+                                <div class="media-label">Texture Hạt Tim</div>
+                                <input type="text" id="particleImg" value="/uploads/demo_particle.png" style="font-size: 0.72rem; padding: 4px 6px;">
+                                <label class="btn btn-sm btn-primary" style="cursor: pointer; width: 100%;">
+                                    📁 Tải ảnh
+                                    <input type="file" accept="image/*" class="upload-input-file" onchange="devUpload(this, 'particleImg', 'particleImgPrev')">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 3: LETTER & CALENDAR -->
+                <div class="tab-content" id="tab-content" style="display: none;">
+                    <div class="panel-section">
+                        <div class="section-header">
+                            <div>
+                                <h3 class="section-title">💌 Bức Thư Trao Gửi (Love Letter)</h3>
+                                <p class="section-desc">Xuất hiện mở phong bì với hiệu ứng giấy viết thư sang trọng</p>
+                            </div>
+                        </div>
+
+                        <div class="grid-2">
+                            <div class="form-group">
+                                <label>Tiêu đề thư</label>
+                                <input type="text" id="letterTitle" value="Gửi anh yêu!">
+                            </div>
+                            <div class="form-group">
+                                <label>Chữ ký người gửi</label>
+                                <input type="text" id="letterSignature" value="Người thương của anh ♥">
+                            </div>
+                            <div class="form-group full">
+                                <label>Nội dung bức thư</label>
+                                <textarea id="letterText" rows="5">Nhân ngày Quốc tế Nam giới 19/11, chúc người đàn ông của em luôn mạnh khỏe, bình an, vững vàng và hạnh phúc trên mọi chặng đường.
+
+Cảm ơn anh vì đã luôn chở che, nhường nhịn và yêu thương em. Dù ngoài kia có bận rộn thế nào, về bên em luôn có sự dịu dàng chờ anh nhé! ❤️</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Chú thích ảnh dưới thư</label>
+                                <input type="text" id="letterCaption" value="Mình mãi bên nhau anh nhé ♥">
+                            </div>
+                            <div class="form-group">
+                                <label>Màu sắc phong bì</label>
+                                <select id="letterEnvColor">
+                                    <option value="navy" selected>Navy Blue (Xanh Hải Quân)</option>
+                                    <option value="pink">Romantic Pink (Hồng Pastel)</option>
+                                    <option value="night">Obsidian Night (Đen Huyền Bí)</option>
+                                    <option value="red">Ruby Red (Đỏ Quyến Rũ)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel-section" style="margin-top: 18px;">
+                        <div class="section-header">
+                            <div>
+                                <h3 class="section-title">📅 Lịch Xé 3D Ngày Kỷ Niệm (Tear Calendar)</h3>
+                                <p class="section-desc">Hiệu ứng lật xé tờ lịch 3D sống động</p>
+                            </div>
+                        </div>
+
+                        <div class="grid-2">
+                            <div class="form-group">
+                                <label>Ngày (Day)</label>
+                                <input type="number" id="calDay" value="19" min="1" max="31">
+                            </div>
+                            <div class="form-group">
+                                <label>Tháng (Month)</label>
+                                <input type="number" id="calMonth" value="11" min="1" max="12">
+                            </div>
+                            <div class="form-group">
+                                <label>Tên ngày kỷ niệm</label>
+                                <input type="text" id="calTitle" value="Ngày Quốc tế Nam giới">
+                            </div>
+                            <div class="form-group">
+                                <label>Dòng ghi chú dưới tờ lịch</label>
+                                <input type="text" id="calCaption" value="Ngày của anh ♥">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 4: BOUQUET & SCRATCH CARD -->
+                <div class="tab-content" id="tab-bouquet" style="display: none;">
+                    <div class="panel-section">
+                        <div class="section-header">
+                            <div>
+                                <h3 class="section-title">🌹 Bó Hoa Vĩnh Cửu 3D (Eternal Bouquet)</h3>
+                                <p class="section-desc">Bó hoa 3D tỏa sáng không bao giờ tàn</p>
+                            </div>
+                        </div>
+
+                        <div class="grid-2">
+                            <div class="form-group">
+                                <label>Số lượng hoa</label>
+                                <input type="number" id="bouquetCount" value="9" min="1" max="999">
+                            </div>
+                            <div class="form-group">
+                                <label>Màu sắc hoa</label>
+                                <select id="bouquetColor">
+                                    <option value="red" selected>Đỏ Rực Rỡ (Red)</option>
+                                    <option value="pink">Hồng Ngọt Ngào (Pink)</option>
+                                    <option value="yellow">Vàng Hoàng Gia (Yellow)</option>
+                                    <option value="blue">Xanh Đại Dương (Blue)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Tiêu đề bó hoa</label>
+                                <input type="text" id="bouquetTitle" value="Tặng anh bó hoa không bao giờ tàn">
+                            </div>
+                            <div class="form-group">
+                                <label>Ý nghĩa thông điệp</label>
+                                <input type="text" id="bouquetMeaning" value="Mãi mãi bên nhau">
+                            </div>
+                            <div class="form-group full">
+                                <label>Lời nhắn trao tặng</label>
+                                <input type="text" id="bouquetSubtitle" value="Cảm ơn anh vì đã luôn là điểm tựa vững chắc và dịu dàng nhất của em.">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel-section" style="margin-top: 18px;">
+                        <div class="section-header">
+                            <div>
+                                <h3 class="section-title">🎁 Thẻ Cào Bí Mật / Hộp Quà</h3>
+                                <p class="section-desc">Người nhận dùng ngón tay / chuột cào lớp phủ để khám phá điều bất ngờ</p>
+                            </div>
+                        </div>
+
+                        <div class="grid-2">
+                            <div class="form-group">
+                                <label>Màu sắc hộp quà</label>
+                                <select id="giftBoxColor">
+                                    <option value="navy" selected>Navy Blue</option>
+                                    <option value="pink">Pink Pastel</option>
+                                    <option value="red">Crimson Red</option>
+                                </select>
+                            </div>
+                            <div class="form-group full">
+                                <label>Thông điệp bí mật ẩn sau lớp cào</label>
+                                <textarea id="giftBoxMsg" rows="2">Tối 19/11, 7 giờ — mình đi ăn tối kỷ niệm nhé anh! Em khao! 🥂✨</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 5: FINALE 3D -->
+                <div class="tab-content" id="tab-finale" style="display: none;">
+                    <div class="panel-section">
+                        <div class="section-header">
+                            <div>
+                                <h3 class="section-title">🎆 Màn Kết Pháo Hoa 3D & Đồng Hồ Đếm Ngày Yêu</h3>
+                                <p class="section-desc">Pháo hoa 3D bắn chữ trên nền nhạc lãng mạn</p>
+                            </div>
+                        </div>
+
+                        <div class="grid-2">
+                            <div class="form-group">
+                                <label>Ngày bắt đầu bên nhau (loveStart)</label>
+                                <input type="date" id="loveStart" value="2024-02-14">
+                            </div>
+                            <div class="form-group">
+                                <label>Nhãn đồng hồ đếm</label>
+                                <input type="text" id="counterLabel" value="Mình đã bên nhau">
+                            </div>
+                            <div class="form-group full">
+                                <label>Thông điệp màn kết</label>
+                                <input type="text" id="finaleMessage" value="Cảm ơn anh vì đã đến bên em">
+                            </div>
+                        </div>
+
+                        <div class="form-group full" style="margin-top: 12px;">
+                            <label>3 Dòng Chữ Pháo Hoa Bay Lên (Fireworks Text Bursts)</label>
+                            <div class="grid-3" style="margin-top: 6px;">
+                                <input type="text" id="fin0" value="19.11" placeholder="Từ 1">
+                                <input type="text" id="fin1" value="Thương Anh" placeholder="Từ 2">
+                                <input type="text" id="fin2" value="Mãi Bên Nhau" placeholder="Từ 3">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 6: RAW JSON API -->
+                <div class="tab-content" id="tab-json" style="display: none;">
+                    <div class="panel-section">
+                        <div class="section-header">
+                            <div>
+                                <h3 class="section-title">💻 Trình Soạn Thảo JSON Trực Tiếp (Developer Raw Mode)</h3>
+                                <p class="section-desc">Xem và chỉnh sửa trực tiếp cấu trúc JSON chuẩn của API</p>
+                            </div>
+                            <div style="display: flex; gap: 8px;">
+                                <button type="button" class="btn btn-sm" id="btnSyncFromJson">🔄 Cập nhật ngược vào Form</button>
+                                <button type="button" class="btn btn-sm" id="btnCopyJson">📋 Copy JSON</button>
+                            </div>
+                        </div>
+
+                        <textarea id="rawJsonEditor" class="json-editor" spellcheck="false"></textarea>
+                    </div>
+                </div>
+            </form>
+
+        </section>
+
+        <!-- Right: Sticky Live Preview Pane -->
+        <aside class="preview-pane">
+            <div class="preview-toolbar">
+                <div class="preview-status">
+                    <span class="status-dot"></span>
+                    <span id="previewStatusText">LIVE PREVIEW READY</span>
+                </div>
+                <div style="display: flex; gap: 6px;">
+                    <button type="button" class="btn btn-sm" id="btnReloadPreview" title="Tải lại preview">🔄</button>
+                    <a href="/gift.php?code=PVB33A62" target="_blank" class="btn btn-sm btn-ghost" id="btnOpenExternal" title="Mở toàn màn hình tab mới">↗️</a>
+                </div>
+            </div>
+
+            <!-- iPhone Frame Mockup -->
+            <div class="device-container">
+                <div class="device-notch"></div>
+                <iframe id="previewFrame" class="device-iframe" src="/gift.php?code=PVB33A62"></iframe>
+            </div>
+        </aside>
+    </main>
+
+    <!-- Success Modal -->
+    <div class="modal-overlay" id="successModal">
+        <div class="modal-card">
+            <div style="font-size: 3rem;">⚡</div>
+            <h2 style="font-size: 1.4rem; font-weight: 800;">DEPLOY THÀNH CÔNG!</h2>
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">
+                Dữ liệu quà tặng 3D đã được lưu trữ vĩnh viễn trên Server qua API.
+            </p>
+
+            <div style="background: #0d0c14; border: 1px solid var(--border-subtle); padding: 12px 18px; border-radius: 10px; display: flex; align-items: center; justify-content: space-between;">
+                <span style="font-family: var(--font-mono); color: var(--cyan); font-weight: 700; font-size: 1.1rem;" id="modalCodeBadge">PVB33A62</span>
+                <span class="badge-dev">STATUS: 200 OK</span>
+            </div>
+
+            <div style="display: flex; gap: 8px;">
+                <input type="text" id="modalLinkInput" readonly style="flex: 1; font-family: var(--font-mono); font-size: 0.82rem; color: #fff;">
+                <button type="button" class="btn btn-primary" id="btnModalCopy">Sao chép</button>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 6px;">
+                <button type="button" class="btn" style="flex: 1;" id="btnModalClose">Đóng</button>
+                <a href="#" target="_blank" class="btn btn-primary" style="flex: 1;" id="btnModalOpen">Mở Xem Quà 🚀</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        // Preset Data
+        const PRESETS = {
+            "1911": {
+                appTitle: "Món Quà Nhỏ 19/11 - Dành riêng cho Anh 🎁",
+                recipientName: "Anh Yêu",
+                heartName: "Anh Yêu",
+                particleColor: "#f5b82e",
+                enablePasscode: false,
+                passcode: "1911",
+                passcodeTitle: "Nhập mật khẩu",
+                passcodeSubtitle: "Gợi ý: Ngày Quốc tế Nam giới (4 số)",
+                morphTexts: ["Chúc mừng", "Ngày Quốc tế Nam giới", "19 tháng 11", "Cảm ơn anh vì tất cả"],
+                letterTitle: "Gửi anh yêu!",
+                letterText: "Nhân ngày Quốc tế Nam giới 19/11, chúc người đàn ông của em luôn mạnh khỏe, bình an, vững vàng và hạnh phúc trên mọi chặng đường.\n\nCảm ơn anh vì đã luôn chở che, nhường nhịn và yêu thương em. Dù ngoài kia có bận rộn thế nào, về bên em luôn có sự dịu dàng chờ anh nhé! ❤️",
+                letterEnvColor: "navy",
+                calDay: 19,
+                calMonth: 11,
+                calTitle: "Ngày Quốc tế Nam giới",
+                calCaption: "Ngày của anh ♥",
+                bouquetCount: 9,
+                bouquetColor: "red",
+                giftBoxColor: "navy",
+                giftBoxMsg: "Tối 19/11, 7 giờ — mình đi ăn tối kỷ niệm nhé anh! Em khao! 🥂✨",
+                fin0: "19.11", fin1: "Thương Anh", fin2: "Mãi Bên Nhau"
+            },
+            "2010": {
+                appTitle: "Món Quà Dành Riêng Cho Em 💖",
+                recipientName: "Em Yêu",
+                heartName: "Em Yêu",
+                particleColor: "#ec4899",
+                enablePasscode: false,
+                passcode: "2010",
+                passcodeTitle: "Nhập mật mã yêu thương",
+                passcodeSubtitle: "Gợi ý: Ngày Phụ nữ Việt Nam (2010)",
+                morphTexts: ["Gửi Em", "Người Con Gái Tuyệt Vời", "Luôn Rạng Rỡ Nhé", "Thương Em Thật Nhiều"],
+                letterTitle: "Gửi công chúa của anh!",
+                letterText: "Chúc em yêu luôn xinh đẹp, hạnh phúc và ngập tràn niềm vui mỗi ngày.\n\nCảm ơn vì đã luôn ở bên và thấu hiểu anh. Yêu em rất nhiều! ❤️",
+                letterEnvColor: "pink",
+                calDay: 20,
+                calMonth: 10,
+                calTitle: "Ngày Phụ Nữ Việt Nam",
+                calCaption: "Ngày của em ♥",
+                bouquetCount: 99,
+                bouquetColor: "pink",
+                giftBoxColor: "pink",
+                giftBoxMsg: "Cuối tuần này mình cùng đi xem phim và ăn món em thích nhé! 🎬🍰",
+                fin0: "Thương Em", fin1: "Xinh Đẹp", fin2: "Mãi Yêu"
+            },
+            "valentine": {
+                appTitle: "Happy Valentine's Day · Mãi Bên Nhau 💑",
+                recipientName: "Người Thương",
+                heartName: "My Love",
+                particleColor: "#f43f5e",
+                enablePasscode: true,
+                passcode: "1402",
+                passcodeTitle: "Mật khẩu ngày lễ tình nhân",
+                passcodeSubtitle: "Gợi ý: Ngày Valentine (1402)",
+                morphTexts: ["Happy Valentine", "Cảm Ơn Vì Tất Cả", "Nắm Chặt Tay Nhau", "Forever With You"],
+                letterTitle: "Gửi người anh/em yêu!",
+                letterText: "Valentine này và nhiều mùa Valentine sau nữa, ước mong chúng ta vẫn mãi nắm chặt tay nhau vượt qua mọi thử thách.\n\nMãi là điểm tựa bình yên của nhau nhé! ❤️",
+                letterEnvColor: "red",
+                calDay: 14,
+                calMonth: 2,
+                calTitle: "Valentine's Day",
+                calCaption: "Ngày Tình Nhân ♥",
+                bouquetCount: 99,
+                bouquetColor: "red",
+                giftBoxColor: "red",
+                giftBoxMsg: "Tặng người thương một chuyến du lịch chỉ có hai đứa mình! ✈️🏖️",
+                fin0: "14.02", fin1: "Forever", fin2: "Love You"
+            },
+            "birthday": {
+                appTitle: "Happy Birthday · Chúc Mừng Sinh Nhật 🎂",
+                recipientName: "Bạn Yêu",
+                heartName: "Happy Birthday",
+                particleColor: "#38bdf8",
+                enablePasscode: false,
+                passcode: "1010",
+                passcodeTitle: "Mật mã sinh nhật",
+                passcodeSubtitle: "Gợi ý: Ngày sinh nhật của bạn",
+                morphTexts: ["Chúc Mừng Sinh Nhật", "Thêm Một Tuổi Mới", "Vạn Sự Như Ý", "Luôn Mỉm Cười Nhé"],
+                letterTitle: "Chúc mừng sinh nhật bạn!",
+                letterText: "Tuổi mới chúc bạn luôn ngập tràn năng lượng tích cực, công việc hanh thông, gặt hái nhiều thành công rực rỡ và luôn hạnh phúc nhé! 🎉🎂",
+                letterEnvColor: "night",
+                calDay: 1,
+                calMonth: 1,
+                calTitle: "Happy Birthday",
+                calCaption: "Ngày Sinh Nhật Đặc Biệt ♥",
+                bouquetCount: 19,
+                bouquetColor: "yellow",
+                giftBoxColor: "navy",
+                giftBoxMsg: "Bánh sinh nhật và một món quà bất ngờ đang trên đường tới bạn! 🎁🎂",
+                fin0: "Happy", fin1: "Birthday", fin2: "To You"
+            }
+        };
+
+        // Notification Toast
+        function showToast(msg, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `<span>${type === 'success' ? '⚡' : '⚠️'}</span> <span>${msg}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 250);
+            }, 3000);
+        }
+
+        // 6 Sphere Cards Setup
+        const sphereGrid = document.getElementById('sphereMediaGrid');
+        const defaultSpheres = [
+            '/uploads/demo_sphere-0.jpg',
+            '/uploads/demo_sphere-1.jpg',
+            '/uploads/demo_sphere-2.jpg',
+            '/uploads/demo_sphere-3.jpg',
+            '/uploads/demo_sphere-4.jpg',
+            '/uploads/demo_sphere-5.jpg'
+        ];
+
+        sphereGrid.innerHTML = defaultSpheres.map((src, i) => `
+            <div class="media-card">
+                <div class="media-thumb">
+                    <img id="spherePrev_${i}" src="${src}">
+                </div>
+                <div class="media-label">Sphere Orbit #${i + 1}</div>
+                <input type="text" id="sphereVal_${i}" value="${src}" style="font-size: 0.72rem; padding: 4px 6px;">
+                <label class="btn btn-sm btn-primary" style="cursor: pointer; width: 100%;">
+                    📁 Tải ảnh
+                    <input type="file" accept="image/*" class="upload-input-file" onchange="devUpload(this, 'sphereVal_${i}', 'spherePrev_${i}')">
+                </label>
+            </div>
+        `).join('');
+
+        // Developer Upload Handler
+        async function devUpload(input, valId, prevId) {
+            if (!input.files || !input.files[0]) return;
+            const file = input.files[0];
+            const targetVal = document.getElementById(valId);
+            const targetPrev = document.getElementById(prevId);
+
+            targetVal.value = '⏳ Uploading...';
+
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                const base64 = e.target.result;
+                targetPrev.src = base64;
+
+                try {
+                    const res = await fetch('/api/upload', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name: file.name, data: base64 })
+                    });
+                    const d = await res.json();
+                    if (d.success) {
+                        targetVal.value = d.url;
+                        showToast(`Uploaded: ${d.fileName}`);
+                        updateJsonEditorFromForm();
+                    } else {
+                        showToast(d.error || 'Upload error', 'error');
+                    }
+                } catch (err) {
+                    showToast(err.message, 'error');
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        
+        // Multi-image upload for Sphere Orbit
+        async function devUploadMultiple(input) {
+            if (!input.files || !input.files.length) return;
+            const files = Array.from(input.files).slice(0, 6);
+            showToast(`Đang đẩy ${files.length} ảnh lên API...`);
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const targetVal = document.getElementById(`sphereVal_${i}`);
+                const targetPrev = document.getElementById(`spherePrev_${i}`);
+                if (!targetVal) continue;
+
+                targetVal.value = '⏳ Uploading...';
+                await new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = async (e) => {
+                        const base64 = e.target.result;
+                        targetPrev.src = base64;
+                        try {
+                            const res = await fetch('/api/upload', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ name: file.name, data: base64 })
+                            });
+                            const d = await res.json();
+                            if (d.success) {
+                                targetVal.value = d.url;
+                            }
+                        } catch (err) {}
+                        resolve();
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+            showToast(`✅ Đã đẩy thành công ${files.length} ảnh vào API lưu trữ dạng link!`);
+            updateJsonEditorFromForm();
+        }
+
+        // Prompt user to import image from external link into API storage
+        async function promptImportUrl() {
+            const remoteUrl = prompt('Dán link ảnh (https://...):');
+            if (!remoteUrl || !remoteUrl.startsWith('http')) return;
+
+            showToast('Đang tải ảnh từ link và lưu vào API...');
+            try {
+                const res = await fetch('/api/upload-url', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url: remoteUrl })
+                });
+                const d = await res.json();
+                if (d.success) {
+                    showToast(`✅ Đã lưu ảnh thành công: ${d.url}`);
+                    // Prompt which slot to assign
+                    const slot = prompt('Bạn muốn gán vào slot nào? (0-5: Sphere, letter, giftbox, particle):', '0');
+                    if (slot >= '0' && slot <= '5') {
+                        document.getElementById(`sphereVal_${slot}`).value = d.url;
+                        document.getElementById(`spherePrev_${slot}`).src = d.url;
+                    } else if (slot === 'letter') {
+                        document.getElementById('letterImg').value = d.url;
+                        document.getElementById('letterImgPrev').src = d.url;
+                    } else if (slot === 'giftbox') {
+                        document.getElementById('giftBoxImg').value = d.url;
+                        document.getElementById('giftBoxImgPrev').src = d.url;
+                    } else if (slot === 'particle') {
+                        document.getElementById('particleImg').value = d.url;
+                        document.getElementById('particleImgPrev').src = d.url;
+                    }
+                    updateJsonEditorFromForm();
+                } else {
+                    showToast(d.error || 'Lỗi lưu link ảnh', 'error');
+                }
+            } catch (err) {
+                showToast(err.message, 'error');
+            }
+        }
+
+        // Tab Switching
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                tabBtns.forEach(b => b.classList.remove('active'));
+                tabContents.forEach(c => c.style.display = 'none');
+
+                btn.classList.add('active');
+                const target = document.getElementById(btn.getAttribute('data-tab'));
+                if (target) target.style.display = 'block';
+
+                if (btn.getAttribute('data-tab') === 'tab-json') {
+                    updateJsonEditorFromForm();
+                }
+            });
+        });
+
+        // Color Sync
+        const picker = document.getElementById('particleColorPicker');
+        const colorText = document.getElementById('particleColor');
+        picker.addEventListener('input', e => colorText.value = e.target.value);
+        colorText.addEventListener('input', e => picker.value = e.target.value);
+
+        // Random Code Generator
+        function randomCode() {
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+            let res = '';
+            for (let i = 0; i < 8; i++) res += chars.charAt(Math.floor(Math.random() * chars.length));
+            return res;
+        }
+
+        const giftCodeInput = document.getElementById('giftCode');
+        const previewUrlBox = document.getElementById('previewUrlBox');
+
+        function updateCode(val) {
+            const clean = val.toUpperCase().replace(/[^A-Z0-9_-]/g, '');
+            giftCodeInput.value = clean;
+            previewUrlBox.value = `/gift.php?code=${clean}`;
+        }
+
+        document.getElementById('btnRandomCode').addEventListener('click', () => {
+            updateCode(randomCode());
+        });
+
+        giftCodeInput.addEventListener('input', e => updateCode(e.target.value));
+
+        // Build Payload from Form
+        function buildPayload() {
+            const sphereImages = [];
+            for (let i = 0; i < 6; i++) {
+                const el = document.getElementById(`sphereVal_${i}`);
+                sphereImages.push(el ? el.value.trim() : `/uploads/demo_sphere-${i}.jpg`);
+            }
+
+            const flyingCaptions = [
+                document.getElementById('cap0').value.trim(),
+                document.getElementById('cap1').value.trim(),
+                document.getElementById('cap2').value.trim(),
+                document.getElementById('cap3').value.trim(),
+                document.getElementById('cap4').value.trim()
+            ].filter(Boolean);
+
+            const code = giftCodeInput.value.trim().toUpperCase();
+
+            return {
+                code: code,
+                config: {
+                    appTitle: document.getElementById('appTitle').value.trim(),
+                    appIcon: "./app/assets/images/icons/couple.png",
+                    enableWebsiteInfo: true,
+                    enablePasscode: document.getElementById('enablePasscode').checked,
+                    passcode: document.getElementById('passcode').value.trim(),
+                    passcodeTitle: document.getElementById('passcodeTitle').value.trim(),
+                    passcodeSubtitle: document.getElementById('passcodeSubtitle').value.trim(),
+                    enableMorphEffect: true,
+                    morphTexts: [
+                        document.getElementById('morph0').value.trim(),
+                        document.getElementById('morph1').value.trim(),
+                        document.getElementById('morph2').value.trim(),
+                        document.getElementById('morph3').value.trim()
+                    ].filter(Boolean),
+                    particleImage: document.getElementById('particleImg').value.trim() || "/uploads/demo_particle.png",
+                    particleImageShape: "heart",
+                    particleColor: colorText.value.trim() || "#f5b82e",
+                    heartName: document.getElementById('heartName').value.trim() || "Anh Yêu",
+                    enableSphere: true,
+                    sphereImages: sphereImages,
+                    enableSphereFlyingImages: true,
+                    flyingCaptions: flyingCaptions,
+                    enableLetter: true,
+                    letter: {
+                        title: document.getElementById('letterTitle').value.trim(),
+                        text: document.getElementById('letterText').value.trim(),
+                        image: document.getElementById('letterImg').value.trim() || "/uploads/demo_letter.png",
+                        caption: document.getElementById('letterCaption').value.trim(),
+                        signature: document.getElementById('letterSignature').value.trim(),
+                        envColor: document.getElementById('letterEnvColor').value
+                    },
+                    bgMusic: "./app/assets/music/givemeyourforever.mp3",
+                    bgVolume: 0.55,
+                    autoPlay: false,
+                    recipientName: document.getElementById('recipientName').value.trim(),
+                    enableCalendar: true,
+                    calendar: {
+                        day: parseInt(document.getElementById('calDay').value) || 19,
+                        month: parseInt(document.getElementById('calMonth').value) || 11,
+                        title: document.getElementById('calTitle').value.trim(),
+                        caption: document.getElementById('calCaption').value.trim()
+                    },
+                    enableBouquet: true,
+                    bouquet: {
+                        count: parseInt(document.getElementById('bouquetCount').value) || 9,
+                        color: document.getElementById('bouquetColor').value,
+                        title: document.getElementById('bouquetTitle').value.trim(),
+                        meaning: document.getElementById('bouquetMeaning').value.trim(),
+                        subtitle: document.getElementById('bouquetSubtitle').value.trim()
+                    },
+                    enableGiftBox: true,
+                    giftBox: {
+                        color: document.getElementById('giftBoxColor').value,
+                        message: document.getElementById('giftBoxMsg').value.trim(),
+                        image: document.getElementById('giftBoxImg').value.trim() || "/uploads/demo_giftbox.jpg"
+                    },
+                    enableFinale: true,
+                    finale: {
+                        texts: [
+                            document.getElementById('fin0').value.trim(),
+                            document.getElementById('fin1').value.trim(),
+                            document.getElementById('fin2').value.trim()
+                        ].filter(Boolean),
+                        message: document.getElementById('finaleMessage').value.trim(),
+                        loveStart: document.getElementById('loveStart').value,
+                        counterLabel: document.getElementById('counterLabel').value.trim()
+                    }
+                },
+                music: "./app/assets/music/givemeyourforever.mp3"
+            };
+        }
+
+        // Update JSON editor
+        function updateJsonEditorFromForm() {
+            const payload = buildPayload();
+            document.getElementById('rawJsonEditor').value = JSON.stringify(payload, null, 2);
+        }
+
+        // Apply from JSON Editor
+        document.getElementById('btnSyncFromJson').addEventListener('click', () => {
+            try {
+                const data = JSON.parse(document.getElementById('rawJsonEditor').value);
+                applyDataToForm(data);
+                showToast('Đã đồng bộ từ JSON vào giao diện Form!');
+            } catch (e) {
+                showToast('JSON Syntax Error: ' + e.message, 'error');
+            }
+        });
+
+        // Apply Data Object to Form
+        function applyDataToForm(d) {
+            if (d.code) updateCode(d.code);
+            const c = d.config || {};
+            if (c.recipientName) document.getElementById('recipientName').value = c.recipientName;
+            if (c.appTitle) document.getElementById('appTitle').value = c.appTitle;
+            if (c.heartName) document.getElementById('heartName').value = c.heartName;
+            if (c.particleColor) {
+                picker.value = c.particleColor;
+                colorText.value = c.particleColor;
+            }
+            if (typeof c.enablePasscode !== 'undefined') document.getElementById('enablePasscode').checked = !!c.enablePasscode;
+            if (c.passcode) document.getElementById('passcode').value = c.passcode;
+            if (c.passcodeTitle) document.getElementById('passcodeTitle').value = c.passcodeTitle;
+            if (c.passcodeSubtitle) document.getElementById('passcodeSubtitle').value = c.passcodeSubtitle;
+
+            if (c.morphTexts) {
+                c.morphTexts.forEach((t, i) => {
+                    const el = document.getElementById(`morph${i}`);
+                    if (el) el.value = t;
+                });
+            }
+
+            if (c.sphereImages) {
+                c.sphereImages.forEach((s, i) => {
+                    const v = document.getElementById(`sphereVal_${i}`);
+                    const p = document.getElementById(`spherePrev_${i}`);
+                    if (v) v.value = s;
+                    if (p) p.src = s;
+                });
+            }
+
+            if (c.flyingCaptions) {
+                c.flyingCaptions.forEach((cap, i) => {
+                    const el = document.getElementById(`cap${i}`);
+                    if (el) el.value = cap;
+                });
+            }
+
+            if (c.letter) {
+                if (c.letter.title) document.getElementById('letterTitle').value = c.letter.title;
+                if (c.letter.signature) document.getElementById('letterSignature').value = c.letter.signature;
+                if (c.letter.text) document.getElementById('letterText').value = c.letter.text;
+                if (c.letter.caption) document.getElementById('letterCaption').value = c.letter.caption;
+                if (c.letter.envColor) document.getElementById('letterEnvColor').value = c.letter.envColor;
+                if (c.letter.image) {
+                    document.getElementById('letterImg').value = c.letter.image;
+                    document.getElementById('letterImgPrev').src = c.letter.image;
+                }
+            }
+
+            if (c.calendar) {
+                if (c.calendar.day) document.getElementById('calDay').value = c.calendar.day;
+                if (c.calendar.month) document.getElementById('calMonth').value = c.calendar.month;
+                if (c.calendar.title) document.getElementById('calTitle').value = c.calendar.title;
+                if (c.calendar.caption) document.getElementById('calCaption').value = c.calendar.caption;
+            }
+
+            if (c.bouquet) {
+                if (c.bouquet.count) document.getElementById('bouquetCount').value = c.bouquet.count;
+                if (c.bouquet.color) document.getElementById('bouquetColor').value = c.bouquet.color;
+                if (c.bouquet.title) document.getElementById('bouquetTitle').value = c.bouquet.title;
+                if (c.bouquet.meaning) document.getElementById('bouquetMeaning').value = c.bouquet.meaning;
+                if (c.bouquet.subtitle) document.getElementById('bouquetSubtitle').value = c.bouquet.subtitle;
+            }
+
+            if (c.giftBox) {
+                if (c.giftBox.color) document.getElementById('giftBoxColor').value = c.giftBox.color;
+                if (c.giftBox.message) document.getElementById('giftBoxMsg').value = c.giftBox.message;
+                if (c.giftBox.image) {
+                    document.getElementById('giftBoxImg').value = c.giftBox.image;
+                    document.getElementById('giftBoxImgPrev').src = c.giftBox.image;
+                }
+            }
+
+            if (c.finale) {
+                if (c.finale.loveStart) document.getElementById('loveStart').value = c.finale.loveStart;
+                if (c.finale.counterLabel) document.getElementById('counterLabel').value = c.finale.counterLabel;
+                if (c.finale.message) document.getElementById('finaleMessage').value = c.finale.message;
+                if (c.finale.texts) {
+                    c.finale.texts.forEach((f, i) => {
+                        const el = document.getElementById(`fin${i}`);
+                        if (el) el.value = f;
+                    });
+                }
+            }
+        }
+
+        // Preset Selector
+        document.getElementById('presetSelector').addEventListener('change', (e) => {
+            const p = PRESETS[e.target.value];
+            if (p) {
+                applyDataToForm({ config: p });
+                showToast(`Đã áp dụng mẫu: ${e.target.options[e.target.selectedIndex].text}`);
+            }
+        });
+
+        // Fetch Existing Code
+        async function fetchExistingCode(code) {
+            if (!code) return;
+            try {
+                const res = await fetch(`/api/gifts/${encodeURIComponent(code)}`);
+                const data = await res.json();
+                if (data.success && data.data) {
+                    applyDataToForm(data.data);
+                    showToast(`Đã nạp thành công mã [${code}]`);
+                    // update live preview frame
+                    document.getElementById('previewFrame').src = `/gift.php?code=${code}`;
+                } else {
+                    showToast(`Không tìm thấy mã: ${code}`, 'error');
+                }
+            } catch (err) {
+                showToast(err.message, 'error');
+            }
+        }
+
+        document.getElementById('btnFetchCode').addEventListener('click', () => {
+            fetchExistingCode(giftCodeInput.value.trim());
+        });
+
+        // Deploy / Save Gift
+        async function deployGift() {
+            const payload = buildPayload();
+            const btn = document.getElementById('btnDeployTop');
+            btn.disabled = true;
+            btn.innerText = '⚡ DEPLOYING...';
+
+            try {
+                const res = await fetch('/api/gifts', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showToast(`Deploy thành công mã ${data.code}!`);
+                    const fullUrl = window.location.origin + data.giftUrl;
+                    document.getElementById('modalCodeBadge').innerText = data.code;
+                    document.getElementById('modalLinkInput').value = fullUrl;
+                    document.getElementById('btnModalOpen').href = fullUrl;
+                    document.getElementById('successModal').classList.add('active');
+
+                    // Update right-side preview frame immediately
+                    document.getElementById('previewFrame').src = data.giftUrl;
+                    document.getElementById('btnOpenExternal').href = data.giftUrl;
+                } else {
+                    showToast(data.error || 'Deploy failed', 'error');
+                }
+            } catch (e) {
+                showToast(e.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerText = '⚡ DEPLOY QUÀ TẶNG (CTRL+S)';
+            }
+        }
+
+        document.getElementById('btnDeployTop').addEventListener('click', deployGift);
+
+        // Keyboard Shortcut: Ctrl + S / Cmd + S to Deploy
+        window.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault();
+                deployGift();
+            }
+        });
+
+        // Reload Preview
+        document.getElementById('btnReloadPreview').addEventListener('click', () => {
+            const frame = document.getElementById('previewFrame');
+            frame.src = frame.src;
+            showToast('Đã tải lại khung xem thử!');
+        });
+
+        // Copy cURL command
+        document.getElementById('btnCopyCurl').addEventListener('click', () => {
+            const payload = buildPayload();
+            const curl = `curl -X POST "${window.location.origin}/api/gifts" \\\n  -H "Content-Type: application/json" \\\n  -d '${JSON.stringify(payload)}'`;
+            navigator.clipboard.writeText(curl);
+            showToast('Đã copy lệnh cURL vào bộ nhớ tạm!');
+        });
+
+        // Modal Handlers
+        document.getElementById('btnModalClose').addEventListener('click', () => {
+            document.getElementById('successModal').classList.remove('active');
+        });
+
+        document.getElementById('btnModalCopy').addEventListener('click', () => {
+            const input = document.getElementById('modalLinkInput');
+            navigator.clipboard.writeText(input.value);
+            showToast('Đã sao chép link quà tặng!');
+        });
+
+        document.getElementById('btnCopyJson').addEventListener('click', () => {
+            const val = document.getElementById('rawJsonEditor').value;
+            navigator.clipboard.writeText(val);
+            showToast('Đã sao chép mã JSON!');
+        });
+    </script>
+</body>
+</html>
