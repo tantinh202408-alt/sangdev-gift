@@ -1811,14 +1811,29 @@ Cảm ơn anh vì đã luôn chở che, nhường nhịn và yêu thương em. D
 
         // Auto-detect YouTube / TikTok when user pastes into bgMusicUrl
         if (bgMusicInput) {
-            bgMusicInput.addEventListener('change', (e) => {
-                const val = e.target.value.trim();
-                if (val.includes('youtube.com') || val.includes('youtu.be') || val.includes('tiktok.com')) {
-                    videoInput.value = val;
-                    if (confirm('Phát hiện link YouTube/TikTok! Bạn có muốn tự động trích xuất thành MP3 không?')) {
-                        convertVideoToAudio(val);
-                    }
+            let lastAutoConverted = '';
+            const handleMusicLink = (val) => {
+                val = (val || '').trim();
+                if (!val || val === lastAutoConverted) return;
+                if (val.includes('tiktok.com') && !val.includes('v16-ies-music') && !val.includes('tikwm.com')) {
+                    lastAutoConverted = val;
+                    if (videoInput) videoInput.value = val;
+                    showToast('🎵 Đang tự động trích xuất file MP3 từ TikTok...');
+                    convertVideoToAudio(val);
+                } else if (val.includes('youtube.com') || val.includes('youtu.be')) {
+                    lastAutoConverted = val;
+                    if (videoInput) videoInput.value = val;
+                    convertVideoToAudio(val);
                 }
+            };
+            bgMusicInput.addEventListener('input', (e) => {
+                const val = e.target.value.trim();
+                if (val.includes('tiktok.com') && !val.includes('v16-ies-music') && !val.includes('tikwm.com')) {
+                    handleMusicLink(val);
+                }
+            });
+            bgMusicInput.addEventListener('change', (e) => {
+                handleMusicLink(e.target.value);
             });
         }
 
@@ -2116,6 +2131,12 @@ Cảm ơn anh vì đã luôn chở che, nhường nhịn và yêu thương em. D
 
         // Deploy / Save Gift
         async function deployGift() {
+            const rawMusicInput = (document.getElementById('bgMusicUrl') ? document.getElementById('bgMusicUrl').value.trim() : '');
+            if (rawMusicInput.includes('tiktok.com') && !rawMusicInput.includes('v16-ies-music') && !rawMusicInput.includes('tikwm.com')) {
+                showToast('🎵 Đang tự động lấy file MP3 trực tiếp từ TikTok...');
+                await convertVideoToAudio(rawMusicInput);
+            }
+
             const payload = buildPayload();
             const btn = document.getElementById('btnDeployTop');
             btn.disabled = true;

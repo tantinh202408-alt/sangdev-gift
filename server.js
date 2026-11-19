@@ -352,6 +352,26 @@ const server = http.createServer(async (req, res) => {
 
             console.log(`[Audio Converter] Đang trích xuất nhạc từ: ${mediaUrl}`);
 
+            // 1. TikTok hỗ trợ trực tiếp không cần yt-dlp (Chạy 100% trên Vercel / Render / Local)
+            if (mediaUrl.includes('tiktok.com')) {
+                try {
+                    const tikRes = await fetch(`https://www.tikwm.com/api/?url=${encodeURIComponent(mediaUrl)}`);
+                    const tikData = await tikRes.json();
+                    if (tikData && tikData.data && (tikData.data.music || tikData.data.play)) {
+                        const musicUrl = tikData.data.music || tikData.data.play;
+                        const title = tikData.data.title || 'Nhạc TikTok';
+                        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+                        return res.end(JSON.stringify({
+                            success: true,
+                            url: musicUrl,
+                            title: title
+                        }));
+                    }
+                } catch (tikErr) {
+                    console.error('[Audio Converter] TikWM lỗi:', tikErr.message);
+                }
+            }
+
             const args = [
                 '--no-playlist',
                 '--js-runtimes', 'node',
@@ -370,7 +390,7 @@ const server = http.createServer(async (req, res) => {
                     res.writeHead(500, { 'Content-Type': 'application/json; charset=utf-8' });
                     return res.end(JSON.stringify({
                         success: false,
-                        error: 'Không thể trích xuất nhạc từ link này: ' + (stderr || error.message).substring(0, 200)
+                        error: 'Không thể trích xuất nhạc tự động từ video này trên serverless. Bạn hãy nhấn "📁 Tải file MP3 từ máy" để tải bài hát yêu thích lên trực tiếp nhé!'
                     }));
                 }
 

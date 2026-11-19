@@ -108,8 +108,13 @@
     if (parentApp && parentApp.config && parentApp.config.finale) {
         finalConfig.finale = Object.assign({}, defaultConfig.finale, parentApp.config.finale);
     }
-    if (parentApp && parentApp.music) {
-        finalConfig.bgMusic = parentApp.music;
+    var chosenMusic = (parentApp && parentApp.config && parentApp.config.bgMusic)
+        || (parentApp && parentApp.music)
+        || (parentApp && parentApp.config && parentApp.config.music)
+        || defaultConfig.bgMusic;
+    if (chosenMusic) {
+        finalConfig.bgMusic = chosenMusic;
+        finalConfig.music = chosenMusic;
     }
 
     window.DEFAULT_APP_CONFIG = defaultConfig;

@@ -46,7 +46,7 @@
       "signature": "Người thương của anh ♥",
       "envColor": "navy"
     },
-    "bgMusic": "/uploads/audio_7676023860285820177.mp3",
+    "bgMusic": "https://v16-ies-music.tiktokcdn-us.com/8ee7d095a9327c97fd86c14db2c10068/6b07bb8b/video/tos/alisg/tos-alisg-v-27dcd7/osV3zAMxIIBvwLB4IhaKAtMVgoi2E5dijrVtfj/?a=583965&bti=OUBzOTg7QGo6OjZAL3AjLTAzYCMxNDNg&&bt=125&ft=4KUr5MX_8Zmo0~I3Ya4jV0ZB.NWrKsd.&mime_type=audio_mpeg&rc=ODg8NTRnZTo7MzNmNzllNEBpM3dobWs5cnZoeTMzODU8NEBeNWAuXi4xNjYxYTMuYjEtYSNkci5qMmRjNTRgLS1kMS1zcw%3D%3D&vvpl=1&l=2026111904532547C55FC373F68A42FD0D&btag=e00088000&shp=d05b14bd&shcp=-",
     "bgVolume": 1,
     "autoPlay": true,
     "recipientName": "Anh Yêu",
@@ -83,5 +83,5 @@
       "counterLabel": "Mình đã bên nhau"
     }
   },
-  "music": "/uploads/audio_7676023860285820177.mp3"
+  "music": "https://v16-ies-music.tiktokcdn-us.com/8ee7d095a9327c97fd86c14db2c10068/6b07bb8b/video/tos/alisg/tos-alisg-v-27dcd7/osV3zAMxIIBvwLB4IhaKAtMVgoi2E5dijrVtfj/?a=583965&bti=OUBzOTg7QGo6OjZAL3AjLTAzYCMxNDNg&&bt=125&ft=4KUr5MX_8Zmo0~I3Ya4jV0ZB.NWrKsd.&mime_type=audio_mpeg&rc=ODg8NTRnZTo7MzNmNzllNEBpM3dobWs5cnZoeTMzODU8NEBeNWAuXi4xNjYxYTMuYjEtYSNkci5qMmRjNTRgLS1kMS1zcw%3D%3D&vvpl=1&l=2026111904532547C55FC373F68A42FD0D&btag=e00088000&shp=d05b14bd&shcp=-"
 }
