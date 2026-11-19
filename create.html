@@ -1579,11 +1579,43 @@ Cảm ơn anh vì đã luôn chở che, nhường nhịn và yêu thương em. D
             showToast('Đang kết nối YouTube/TikTok và trích xuất file MP3... Vui lòng đợi vài giây!');
 
             try {
+                // 1. Hỗ trợ TikTok trực tiếp (Chạy mượt mà 100% cả trên Netlify & Render không cần backend)
+                if (rawUrl.includes('tiktok.com')) {
+                    try {
+                        const tikRes = await fetch(`https://www.tikwm.com/api/?url=${encodeURIComponent(rawUrl)}`);
+                        const tikData = await tikRes.json();
+                        if (tikData && tikData.data && (tikData.data.music || tikData.data.play)) {
+                            const musicUrl = tikData.data.music || tikData.data.play;
+                            const title = tikData.data.title || 'Nhạc TikTok';
+                            document.getElementById('bgMusicUrl').value = musicUrl;
+                            document.getElementById('audioTrackName').innerText = title;
+                            document.getElementById('audioTrackUrl').innerText = musicUrl;
+                            document.getElementById('audioPreviewPlayer').src = musicUrl;
+                            showToast(`✅ Đã trích xuất nhạc TikTok thành công!`);
+                            updateJsonEditorFromForm();
+                            return;
+                        }
+                    } catch (tikErr) {
+                        console.log('TikWM direct error, falling back to server:', tikErr);
+                    }
+                }
+
+                // 2. Gọi backend server (khi chạy localhost hoặc Render có cài yt-dlp)
                 const res = await fetch('/api/convert-audio', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ url: rawUrl })
                 });
+
+                // Kiểm tra Content-Type để tránh lỗi SyntaxError Unexpected token '<'
+                const contentType = res.headers.get('content-type') || '';
+                if (!contentType.includes('application/json')) {
+                    if (window.location.hostname.includes('netlify.app')) {
+                        throw new Error('Netlify là host tĩnh không hỗ trợ chạy yt-dlp/Node server. Hãy dán link TikTok (hỗ trợ 100%), dán link file .mp3 trực tiếp, hoặc dùng Render.com nhé!');
+                    }
+                    throw new Error('Server backend không phản hồi JSON (Mã lỗi: ' + res.status + ')');
+                }
+
                 const data = await res.json();
                 if (data.success && data.url) {
                     const targetMusicInput = document.getElementById('bgMusicUrl');
@@ -1601,7 +1633,7 @@ Cảm ơn anh vì đã luôn chở che, nhường nhịn và yêu thương em. D
                     showToast('Lỗi: ' + (data.error || 'Không thể trích xuất audio'), 'error');
                 }
             } catch (err) {
-                showToast('Lỗi kết nối converter: ' + err.message, 'error');
+                showToast(err.message, 'error');
             } finally {
                 btnConvert.disabled = false;
                 btnConvert.innerText = '⚡ Trích Xuất MP3 Ngay';
