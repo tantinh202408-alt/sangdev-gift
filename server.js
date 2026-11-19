@@ -15,6 +15,9 @@ const BUNDLED_UPLOADS_DIR = path.join(__dirname, 'uploads');
 const WRITE_DATA_DIR = isServerless ? path.join(os.tmpdir(), 'sangdev-data') : BUNDLED_DATA_DIR;
 const WRITE_UPLOADS_DIR = isServerless ? path.join(os.tmpdir(), 'sangdev-uploads') : BUNDLED_UPLOADS_DIR;
 
+const DATA_DIR = BUNDLED_DATA_DIR;
+const UPLOADS_DIR = WRITE_UPLOADS_DIR;
+
 const TEMPLATE_FILE = path.join(__dirname, 'index_template.html');
 
 try {
@@ -458,19 +461,39 @@ const server = http.createServer(async (req, res) => {
     // GET /api/gifts: List all gifts
     if (pathname === '/api/gifts' && req.method === 'GET') {
         try {
-            const files = fs.readdirSync(DATA_DIR).filter(f => f.endsWith('.json'));
-            const gifts = [];
-            for (const file of files) {
-                try {
-                    const content = JSON.parse(fs.readFileSync(path.join(DATA_DIR, file), 'utf-8'));
-                    gifts.push({
-                        code: path.basename(file, '.json'),
+            const giftsMap = new Map();
+            const scanDir = (dir) => {
+                if (fs.existsSync(dir)) {
+                    const files = fs.readdirSync(dir).filter(f => f.endsWith('.json'));
+                    for (const file of files) {
+                        try {
+                            const code = path.basename(file, '.json');
+                            if (!giftsMap.has(code)) {
+                                const content = JSON.parse(fs.readFileSync(path.join(dir, file), 'utf-8'));
+                                giftsMap.set(code, {
+                                    code,
+                                    title: content.config?.appTitle || 'Món Quà Nhỏ',
+                                    recipient: content.config?.recipientName || 'Người Thương',
+                                    createdAt: content.createdAt || null
+                                });
+                            }
+                        } catch (e) {}
+                    }
+                }
+            };
+            scanDir(BUNDLED_DATA_DIR);
+            scanDir(WRITE_DATA_DIR);
+            for (const [code, content] of MEM_GIFTS.entries()) {
+                if (!giftsMap.has(code)) {
+                    giftsMap.set(code, {
+                        code,
                         title: content.config?.appTitle || 'Món Quà Nhỏ',
                         recipient: content.config?.recipientName || 'Người Thương',
                         createdAt: content.createdAt || null
                     });
-                } catch (e) {}
+                }
             }
+            const gifts = Array.from(giftsMap.values());
             res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
             return res.end(JSON.stringify({ success: true, count: gifts.length, gifts }));
         } catch (err) {
