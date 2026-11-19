@@ -1,11 +1,26 @@
 {
   "version": 2,
-  "rewrites": [
-    { "source": "/g/:code", "destination": "/index.html?code=:code" },
-    { "source": "/gift", "destination": "/index.html" },
-    { "source": "/gift.php", "destination": "/index.html" },
-    { "source": "/mon-qua-nho-2010/gift.php", "destination": "/index.html" },
-    { "source": "/create", "destination": "/create.html" },
-    { "source": "/api/(.*)", "destination": "/server.js" }
+  "builds": [
+    {
+      "src": "server.js",
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": [
+          "app/**",
+          "data/**",
+          "uploads/**",
+          "templates/**",
+          "index.html",
+          "create.html",
+          "index_template.html"
+        ]
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "server.js"
+    }
   ]
 }
