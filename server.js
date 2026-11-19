@@ -5,16 +5,42 @@ const url = require('url');
 const https = require('https');
 const { execFile } = require('child_process');
 
+const os = require('os');
 const PORT = process.env.PORT || 3000;
-const DATA_DIR = path.join(__dirname, 'data');
-const UPLOADS_DIR = path.join(__dirname, 'uploads');
+const isServerless = Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME || process.env.LAMBDA_TASK_ROOT);
+
+const BUNDLED_DATA_DIR = path.join(__dirname, 'data');
+const BUNDLED_UPLOADS_DIR = path.join(__dirname, 'uploads');
+
+const WRITE_DATA_DIR = isServerless ? path.join(os.tmpdir(), 'sangdev-data') : BUNDLED_DATA_DIR;
+const WRITE_UPLOADS_DIR = isServerless ? path.join(os.tmpdir(), 'sangdev-uploads') : BUNDLED_UPLOADS_DIR;
+
 const TEMPLATE_FILE = path.join(__dirname, 'index_template.html');
 
-if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
+try {
+    if (!fs.existsSync(WRITE_DATA_DIR)) fs.mkdirSync(WRITE_DATA_DIR, { recursive: true });
+    if (!fs.existsSync(WRITE_UPLOADS_DIR)) fs.mkdirSync(WRITE_UPLOADS_DIR, { recursive: true });
+} catch (e) {
+    console.warn('Could not initialize write dirs:', e.message);
 }
-if (!fs.existsSync(UPLOADS_DIR)) {
-    fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+
+const MEM_GIFTS = new Map();
+
+function findGiftFile(code) {
+    const filename = `${code}.json`;
+    const tmpPath = path.join(WRITE_DATA_DIR, filename);
+    if (fs.existsSync(tmpPath)) return tmpPath;
+    const bundledPath = path.join(BUNDLED_DATA_DIR, filename);
+    if (fs.existsSync(bundledPath)) return bundledPath;
+    return null;
+}
+
+function findUploadFile(filename) {
+    const tmpPath = path.join(WRITE_UPLOADS_DIR, filename);
+    if (fs.existsSync(tmpPath)) return tmpPath;
+    const bundledPath = path.join(BUNDLED_UPLOADS_DIR, filename);
+    if (fs.existsSync(bundledPath)) return bundledPath;
+    return null;
 }
 
 // MIME types dictionary
@@ -91,7 +117,7 @@ function downloadRemoteImage(remoteUrl) {
             else if (contentType.includes('svg')) ext = '.svg';
 
             const fileName = `${Date.now()}_remote${ext}`;
-            const filePath = path.join(UPLOADS_DIR, fileName);
+            const filePath = path.join(WRITE_UPLOADS_DIR, fileName);
             const fileStream = fs.createWriteStream(filePath);
 
             res.pipe(fileStream);
@@ -156,25 +182,33 @@ function serveStaticFile(req, res, filePath) {
 // Render Gift Page with specified code
 function renderGiftPage(res, code) {
     const safeCode = (code || 'PVB33A62').toUpperCase().replace(/[^A-Z0-9_-]/g, '');
-    const dataPath = path.join(DATA_DIR, `${safeCode}.json`);
+    let giftData = MEM_GIFTS.get(safeCode);
 
-    let giftData;
-    if (fs.existsSync(dataPath)) {
-        try {
-            giftData = JSON.parse(fs.readFileSync(dataPath, 'utf-8'));
-        } catch (e) {
-            console.error('Error reading gift file:', e);
+    if (!giftData) {
+        const dataPath = findGiftFile(safeCode);
+        if (dataPath) {
+            try {
+                giftData = JSON.parse(fs.readFileSync(dataPath, 'utf-8'));
+            } catch (e) {
+                console.error('Error reading gift file:', e);
+            }
         }
     }
 
     // Fallback to PVB33A62 if not found
     if (!giftData) {
-        const fallbackPath = path.join(DATA_DIR, 'PVB33A62.json');
-        if (fs.existsSync(fallbackPath)) {
-            giftData = JSON.parse(fs.readFileSync(fallbackPath, 'utf-8'));
-        } else {
-            giftData = { config: {}, music: '' };
+        giftData = MEM_GIFTS.get('PVB33A62');
+        if (!giftData) {
+            const fallbackPath = findGiftFile('PVB33A62');
+            if (fallbackPath) {
+                try {
+                    giftData = JSON.parse(fs.readFileSync(fallbackPath, 'utf-8'));
+                } catch (e) {}
+            }
         }
+    }
+    if (!giftData) {
+        giftData = { config: {}, music: '' };
     }
 
     fs.readFile(TEMPLATE_FILE, 'utf-8', (err, template) => {
@@ -250,12 +284,17 @@ const server = http.createServer(async (req, res) => {
                 .replace(/[^a-zA-Z0-9_-]/g, '_')
                 .substring(0, 30);
             const fileName = `${Date.now()}_${cleanBaseName}${ext}`;
-            const filePath = path.join(UPLOADS_DIR, fileName);
+            const filePath = path.join(WRITE_UPLOADS_DIR, fileName);
 
-            const buffer = Buffer.from(matches[2], 'base64');
-            fs.writeFileSync(filePath, buffer);
+            let buffer = null;
+            try {
+                buffer = Buffer.from(matches[2], 'base64');
+                fs.writeFileSync(filePath, buffer);
+            } catch (err) {
+                console.warn('Upload write error in serverless:', err.message);
+            }
 
-            const relativeUrl = `/uploads/${fileName}`;
+            const relativeUrl = (buffer && fs.existsSync(filePath)) ? `/uploads/${fileName}` : data;
             const fullUrl = `${baseUrl}${relativeUrl}`;
 
             res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
@@ -393,8 +432,14 @@ const server = http.createServer(async (req, res) => {
                 music
             };
 
-            const targetFile = path.join(DATA_DIR, `${code}.json`);
-            fs.writeFileSync(targetFile, JSON.stringify(giftPayload, null, 2), 'utf-8');
+            MEM_GIFTS.set(code, giftPayload);
+
+            const targetFile = path.join(WRITE_DATA_DIR, `${code}.json`);
+            try {
+                fs.writeFileSync(targetFile, JSON.stringify(giftPayload, null, 2), 'utf-8');
+            } catch (writeErr) {
+                console.warn('Could not write gift to disk in serverless:', writeErr.message);
+            }
 
             res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
             return res.end(JSON.stringify({
@@ -478,6 +523,29 @@ const server = http.createServer(async (req, res) => {
             return renderGiftPage(res, code);
         }
         return serveStaticFile(req, res, path.join(__dirname, 'create.html'));
+    }
+
+    // Check /data/:code.json dynamic or memory lookup
+    const dataMatch = pathname.match(/^\/data\/([A-Za-z0-9_-]+)\.json$/);
+    if (dataMatch && req.method === 'GET') {
+        const code = dataMatch[1].toUpperCase();
+        if (MEM_GIFTS.has(code)) {
+            res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+            return res.end(JSON.stringify(MEM_GIFTS.get(code)));
+        }
+        const file = findGiftFile(code);
+        if (file) {
+            return serveStaticFile(req, res, file);
+        }
+    }
+
+    // Check /uploads/ dynamic lookup
+    const uploadMatch = pathname.match(/^\/uploads\/(.+)$/);
+    if (uploadMatch && req.method === 'GET') {
+        const file = findUploadFile(uploadMatch[1]);
+        if (file) {
+            return serveStaticFile(req, res, file);
+        }
     }
 
     // ==========================================

@@ -2140,7 +2140,7 @@ Cảm ơn anh vì đã luôn chở che, nhường nhịn và yêu thương em. D
                     document.getElementById('previewFrame').src = data.giftUrl;
                     document.getElementById('btnOpenExternal').href = data.giftUrl;
                 } else {
-                    showToast(data.error || 'Deploy failed', 'error');
+                    throw new Error(data.error || 'Deploy failed');
                 }
             } catch (e) {
                 // Fallback for Netlify / Static hosting: generate both short link and full data URL!
