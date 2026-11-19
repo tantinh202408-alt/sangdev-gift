@@ -483,15 +483,20 @@ const server = http.createServer(async (req, res) => {
     const apiCodeMatch = pathname.match(/^\/api\/gifts\/([A-Za-z0-9_-]+)$/);
     if (apiCodeMatch && req.method === 'GET') {
         const code = apiCodeMatch[1].toUpperCase();
-        const targetFile = path.join(DATA_DIR, `${code}.json`);
-        if (fs.existsSync(targetFile)) {
-            const data = JSON.parse(fs.readFileSync(targetFile, 'utf-8'));
+        if (MEM_GIFTS.has(code)) {
             res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-            return res.end(JSON.stringify({ success: true, code, data }));
-        } else {
-            res.writeHead(404, { 'Content-Type': 'application/json; charset=utf-8' });
-            return res.end(JSON.stringify({ success: false, error: `Gift code ${code} not found` }));
+            return res.end(JSON.stringify({ success: true, code, data: MEM_GIFTS.get(code) }));
         }
+        const targetFile = findGiftFile(code);
+        if (targetFile) {
+            try {
+                const data = JSON.parse(fs.readFileSync(targetFile, 'utf-8'));
+                res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+                return res.end(JSON.stringify({ success: true, code, data }));
+            } catch (e) {}
+        }
+        res.writeHead(404, { 'Content-Type': 'application/json; charset=utf-8' });
+        return res.end(JSON.stringify({ success: false, error: `Gift code ${code} not found` }));
     }
 
     // ==========================================

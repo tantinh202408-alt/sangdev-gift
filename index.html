@@ -65,10 +65,21 @@ body.tpl-body-mon-qua-nho-2010 .gift-brand { position: fixed; left: 0; right: 0;
             window.__GIFTTO_APP = JSON.parse(decodeURIComponent(escape(atob(rawData))));
         } catch(e) {}
     } else if (code) {
-        fetch('/data/' + encodeURIComponent(code.toUpperCase()) + '.json')
+        var cleanCode = encodeURIComponent(code.toUpperCase());
+        fetch('/api/gifts/' + cleanCode)
             .then(function(r) {
-                if (!r.ok) throw new Error('Not found');
+                if (!r.ok) throw new Error('API not ok');
                 return r.json();
+            })
+            .then(function(res) {
+                if (res.data) return res.data;
+                throw new Error('No data field');
+            })
+            .catch(function() {
+                return fetch('/data/' + cleanCode + '.json').then(function(r) {
+                    if (!r.ok) throw new Error('JSON not found');
+                    return r.json();
+                });
             })
             .then(function(d) {
                 window.__GIFTTO_APP = d;
