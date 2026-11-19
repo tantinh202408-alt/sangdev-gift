@@ -1336,6 +1336,12 @@ Cảm ơn anh vì đã luôn chở che, nhường nhịn và yêu thương em. D
                 <span class="badge-dev">STATUS: 200 OK</span>
             </div>
 
+            <!-- Link Type Switcher -->
+            <div style="display: flex; gap: 8px;">
+                <button type="button" class="btn btn-primary" id="btnTabCodeLink" style="flex: 1; font-size: 0.8rem; padding: 6px 10px;">✨ Link Ngắn (/g/MÃ)</button>
+                <button type="button" class="btn" id="btnTabDataLink" style="flex: 1; font-size: 0.8rem; padding: 6px 10px; opacity: 0.7;">📦 Link Tức Thì</button>
+            </div>
+
             <div style="display: flex; gap: 8px;">
                 <input type="text" id="modalLinkInput" readonly style="flex: 1; font-family: var(--font-mono); font-size: 0.82rem; color: #fff;">
                 <button type="button" class="btn btn-primary" id="btnModalCopy">Sao chép</button>
@@ -2137,17 +2143,23 @@ Cảm ơn anh vì đã luôn chở che, nhường nhịn và yêu thương em. D
                     showToast(data.error || 'Deploy failed', 'error');
                 }
             } catch (e) {
-                // Fallback for Netlify / Static hosting: generate direct encoded URL!
+                // Fallback for Netlify / Static hosting: generate both short link and full data URL!
                 try {
+                    const codeVal = (payload.code || 'PVB33A62').toUpperCase();
+                    const shortUrl = window.location.origin + '/g/' + codeVal;
                     const dataParam = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
-                    const fullUrl = window.location.origin + '/?data=' + dataParam;
-                    document.getElementById('modalCodeBadge').innerText = payload.code || 'CUSTOM';
-                    document.getElementById('modalLinkInput').value = fullUrl;
-                    document.getElementById('btnModalOpen').href = fullUrl;
+                    const fullDataUrl = window.location.origin + '/?data=' + dataParam;
+
+                    window.__currentShortUrl = shortUrl;
+                    window.__currentDataUrl = fullDataUrl;
+
+                    document.getElementById('modalCodeBadge').innerText = codeVal;
+                    document.getElementById('modalLinkInput').value = shortUrl;
+                    document.getElementById('btnModalOpen').href = shortUrl;
                     document.getElementById('successModal').classList.add('active');
-                    document.getElementById('previewFrame').src = fullUrl;
-                    document.getElementById('btnOpenExternal').href = fullUrl;
-                    showToast('Đã tạo link chia sẻ trực tiếp (Netlify Mode)!');
+                    document.getElementById('previewFrame').src = shortUrl;
+                    document.getElementById('btnOpenExternal').href = shortUrl;
+                    showToast('Đã tạo link quà tặng thành công!');
                 } catch (err2) {
                     showToast(e.message, 'error');
                 }
@@ -2156,6 +2168,25 @@ Cảm ơn anh vì đã luôn chở che, nhường nhịn và yêu thương em. D
                 btn.innerText = '⚡ DEPLOY QUÀ TẶNG (CTRL+S)';
             }
         }
+
+        // Tab switcher for Short Link vs Data URL
+        document.getElementById('btnTabCodeLink').addEventListener('click', () => {
+            document.getElementById('btnTabCodeLink').className = 'btn btn-primary';
+            document.getElementById('btnTabDataLink').className = 'btn';
+            document.getElementById('btnTabDataLink').style.opacity = '0.7';
+            const url = window.__currentShortUrl || (window.location.origin + '/g/' + (document.getElementById('giftCode').value || 'PVB33A62').toUpperCase());
+            document.getElementById('modalLinkInput').value = url;
+            document.getElementById('btnModalOpen').href = url;
+        });
+
+        document.getElementById('btnTabDataLink').addEventListener('click', () => {
+            document.getElementById('btnTabDataLink').className = 'btn btn-primary';
+            document.getElementById('btnTabCodeLink').className = 'btn';
+            document.getElementById('btnTabCodeLink').style.opacity = '0.7';
+            const url = window.__currentDataUrl || window.location.href;
+            document.getElementById('modalLinkInput').value = url;
+            document.getElementById('btnModalOpen').href = url;
+        });
 
         document.getElementById('btnDeployTop').addEventListener('click', deployGift);
 
