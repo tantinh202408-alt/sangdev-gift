@@ -184,12 +184,171 @@
             flex: 1;
         }
 
+        /* Responsive Studio Layout */
         @media (max-width: 1080px) {
             .studio-layout {
                 grid-template-columns: 1fr;
             }
             .preview-pane {
                 display: none !important;
+            }
+        }
+
+        /* Mobile Optimization (<= 768px & Phones) */
+        .mobile-bottom-bar {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding-bottom: 75px;
+            }
+
+            .topbar {
+                height: 56px;
+                padding: 0 12px;
+            }
+
+            .brand-name {
+                font-size: 1.05rem;
+            }
+
+            .topbar-actions #btnCopyCurl,
+            .topbar-actions #btnDeployTop {
+                display: none !important;
+            }
+
+            #presetSelector {
+                max-width: 160px;
+                font-size: 0.75rem;
+                padding: 6px 8px;
+            }
+
+            .studio-layout {
+                padding: 10px 10px 85px;
+                gap: 14px;
+            }
+
+            .tab-bar {
+                padding: 4px;
+                gap: 4px;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+            }
+
+            .tab-bar::-webkit-scrollbar {
+                display: none;
+            }
+
+            .tab-btn {
+                padding: 7px 11px;
+                font-size: 0.78rem;
+            }
+
+            .panel-section {
+                padding: 14px 12px;
+                border-radius: 10px;
+                gap: 14px;
+            }
+
+            .section-title {
+                font-size: 0.88rem;
+            }
+
+            .section-desc {
+                font-size: 0.74rem;
+            }
+
+            .grid-2,
+            .grid-3 {
+                grid-template-columns: 1fr !important;
+                gap: 12px;
+            }
+
+            /* Touch Target & iOS Safari 16px Zoom Fix */
+            input[type="text"],
+            input[type="number"],
+            input[type="date"],
+            select,
+            textarea {
+                font-size: 16px !important;
+                padding: 10px 12px;
+            }
+
+            .code-input {
+                font-size: 15px !important;
+            }
+
+            .code-input-row {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            .code-input-row input {
+                width: 100%;
+                flex: none;
+            }
+
+            .code-input-row .btn {
+                flex: 1;
+                font-size: 0.8rem;
+                padding: 8px 10px;
+            }
+
+            /* Media Grid on Phones */
+            .media-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 8px;
+            }
+
+            .media-thumb {
+                height: 110px;
+            }
+
+            .media-card {
+                padding: 6px;
+            }
+
+            /* Fixed Floating Mobile Deploy Bar */
+            .mobile-bottom-bar {
+                display: flex;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: rgba(18, 17, 24, 0.95);
+                backdrop-filter: blur(20px);
+                border-top: 1px solid var(--border-subtle);
+                padding: 10px 14px;
+                z-index: 150;
+                box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.6);
+            }
+
+            .mobile-bottom-bar .btn-mobile-deploy {
+                width: 100%;
+                padding: 13px;
+                font-size: 0.95rem;
+                border-radius: 11px;
+                font-weight: 700;
+                letter-spacing: 0.3px;
+            }
+
+            /* Mobile Modal Adjustments */
+            .modal-card {
+                padding: 20px 16px;
+                max-width: calc(100vw - 28px);
+                border-radius: 14px;
+            }
+
+            .toast-container {
+                bottom: 75px;
+                right: 12px;
+                left: 12px;
+            }
+
+            .toast {
+                font-size: 0.82rem;
+                padding: 10px 14px;
             }
         }
 
@@ -2040,5 +2199,11 @@ Cảm ơn anh vì đã luôn chở che, nhường nhịn và yêu thương em. D
             showToast('Đã sao chép mã JSON!');
         });
     </script>
+    <!-- Fixed Mobile Bottom Deploy Bar -->
+    <div class="mobile-bottom-bar">
+        <button type="button" class="btn btn-primary btn-mobile-deploy" onclick="deployGift()">
+            ⚡ DEPLOY QUÀ TẶNG (LƯU & XEM)
+        </button>
+    </div>
 </body>
 </html>
